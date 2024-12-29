@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Successful - Food it up</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <a href="/" class="logo">Food it up</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="success-section fade-in">
+            <div class="success-card">
+                <h1>Registration Successful!</h1>
+                <p class="success-message">
+                    Thank you for registering with Food it up. Your account has been created successfully.
+                </p>
+                <p class="verification-info">
+                    We've sent a verification email to your registered email address. Please verify your email to activate your account.
+                </p>
+                <div class="success-actions">
+                    <a href="/login-customize" class="btn btn-primary">Log In</a>
+                   
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Food it up. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
+

@@ -1,0 +1,40 @@
+server:
+  port: 8090 # API Gateway port
+
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          "[/**]":
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            exposedHeaders: "Authorization"
+      routes:
+        - id: order-service
+          uri: http://localhost:9106 # Downstream User Service
+          predicates:
+            - Path=/orders/**
+          filters:
+            - RemoveRequestHeader=Authorization
+            - AddRequestHeader=Authorization, ${request.headers.Authorization}
+        - id: user-service
+          uri: http://localhost:9091 # Downstream User Service
+          predicates:
+            - Path=/users/**
+          filters:
+            - RemoveRequestHeader=Authorization
+            - AddRequestHeader=Authorization, ${request.headers.Authorization}
+        - id: restaurant-service
+          uri: http://localhost:8083 # Downstream Order Service
+          predicates:
+            - Path=/restaurants/**
+
+  application:
+    gateway:
+      enabled: true
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG # Debugging route issues

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification - Food it up</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="container header-content">
+            <a href="/" class="logo">Food it up</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="verification-section fade-in">
+            <div class="verification-card">
+                <h1>Email Verification</h1>
+                <p th:if="${verificationStatus == 'pending'}" class="verification-message">
+                    We've sent a verification email to your registered email address. Please check your inbox and click
+                    on the verification link to complete your registration.
+                </p>
+                <p th:if="${verificationStatus == 'success'}" class="verification-message success">
+                    Your email has been successfully verified. You can now log in to your account.
+                </p>
+                <p th:if="${verificationStatus == 'error'}" class="verification-message error">
+                    There was an error verifying your email. The verification link may have expired or is invalid.
+                </p>
+                <div class="verification-actions">
+                    <a th:if="${verificationStatus == 'success'}" href="/login" class="btn btn-primary">Log In</a>
+                    <a th:if="${verificationStatus == 'error'}" href="/register" class="btn btn-secondary">Register
+                        Again</a>
+                    <a th:if="${verificationStatus == 'pending'}" href="#"
+                        class="btn btn-secondary resend-verification">Resend Verification Email</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Food it up. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+
+</html>
