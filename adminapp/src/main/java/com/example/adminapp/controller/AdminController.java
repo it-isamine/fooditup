@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.adminapp.config.JWTService;
 import com.example.adminapp.config.SpringSecurityConfig;
 import com.example.adminapp.model.AuthRequest;
 import com.example.adminapp.model.MenuItems;
@@ -44,8 +43,6 @@ import jakarta.servlet.http.HttpServletRequest;
 public class AdminController {
     private static final Logger log = LoggerFactory.getLogger(AdminController.class);
 
-    @Autowired
-    JWTService servicee;
     @Autowired
     WebAppService webAppService;
 
@@ -109,54 +106,11 @@ public class AdminController {
         webAppService.updateUser(user, token);
         return new ModelAndView("redirect:/admin/users");
     }
-
-    // @GetMapping("/login-customize")
-    // public String getLogin(Model model) {
-    // AuthRequest request = new AuthRequest();
-    // model.addAttribute("loginForm",request );
-    // return "login";
-    // }
-
-    // @GetMapping("/homee")
-    // public String home(Model model) {
-    // Iterable<Restaurant> restaurants = webAppService.getRestaurant();
-    // model.addAttribute("restaurants", restaurants);
-    // restaurants.forEach(System.out::println);
-    // return "home";
-
-    // }
-
-    // @PostMapping("/login")
-    // public ModelAndView login(@ModelAttribute AuthRequest loginRequest) throws
-    // AuthenticationException {
-    // System.out.println(loginRequest);
-    // Authentication authentication = authenticationManager.authenticate(
-    // new UsernamePasswordAuthenticationToken(
-    // loginRequest.getUsername(),
-    // loginRequest.getPassword()
-    // )
-    // );
-    // System.out.println("zzze"+authentication);
-    // String token = servicee.generateToken(authentication);
-    // System.out.println(token);
-
-    // ModelAndView modelAndView = new ModelAndView();
-    // modelAndView.setViewName("redirect:/sent"); // Redirect to /home
-    // return modelAndView;
-    // }
-
-    // @GetMapping("/home")
-    // public ResponseEntity<String> homePage(HttpServletRequest request, Model
-    // model) {
-    // // Retrieve the JWT token from the session
-    // String token = (String) request.getSession().getAttribute("jwt");
-    // System.out.println(token);
-
-    // // Add the token to the model to make it available to the view
-    // model.addAttribute("jwtToken", token);
-    // String response =webAppService.sendRequestWithToken(token);
-
-    // return ResponseEntity.ok(response); // This will render the home.html page
-    // }
+    @PostMapping("/restaurants/disable/{id}")
+    public ModelAndView disable(@PathVariable int id) {
+    
+        webAppService.setVisibility( id);
+        return new ModelAndView("redirect:/admin/restaurants");
+    }
 
 }

@@ -41,11 +41,15 @@ public class Order {
 
     @Column(name = "createdat")
     private LocalDateTime createdAt;
+    private String status;
 
     @PrePersist
     public void prePersist() {
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
+        }
+        if (status == null) {
+            status = "processing"; // Default status
         }
     }
 
@@ -53,7 +57,8 @@ public class Order {
     @Override
     public String toString() {
         return "Order{id=" + id + ", user=" + (user != null ? user.getId() : "null") +
-                ", restaurant=" + (restaurant != null ? restaurant.getId() : "null") +
+                ", restaurant=" + (restaurant != null ? restaurant.getId() : "null") +  
+                ", status=" + status +              
                 ", createdAt=" + createdAt + ", items="
                 + (items != null ? "Items list of size: " + items.size() : "No items") + "}";
     }

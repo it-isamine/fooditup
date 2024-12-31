@@ -45,20 +45,18 @@ public class OrderController {
     return ResponseEntity.status(HttpStatus.OK).body(repo.findById(id).orElseThrow());
   }
 
-  @GetMapping("/user/{id}")
-  public Iterable<Order> getorders(@PathVariable UUID id) {
-    Iterable<Order> orders = repo.findAll().stream().filter(e -> e.getUser().getId().equals(id)).toList();
-    System.out.println(orders);
-    return orders;
-  }
 
-  @GetMapping("/user")
-  public Iterable<Order> getMyorders(@RequestAttribute("userid") String name) {
-    System.err.println(name + "zzz");
-    Iterable<Order> orders = repo.findAll().stream().filter(e -> e.getUser().getName().equals(name)).toList();
-    System.out.println(orders);
-    return orders;
+  @GetMapping("/user/{status}")
+  public Iterable<Order> getMyOrders(@RequestAttribute("userid") String userName, @PathVariable String status) {
+  
+      Iterable<Order> filteredOrders = repo.findAll().stream()
+              .filter(order -> order.getUser().getName().equals(userName)) // Filter by user name
+              .filter(order -> "null".equals(status) || "all".equals(status) || order.getStatus().equals(status)) // Filter by status
+              .toList();
+  
+      return filteredOrders;
   }
+  
 
   @GetMapping("recently")
   public List<MenuItems> getItems() {
@@ -71,7 +69,30 @@ public class OrderController {
   @GetMapping("/get")
   public Iterable<Order> getOrdersOfRestaurant(@RequestAttribute("restaurantid") int restaurantid) {
     return repo.findAll().stream().filter(e -> e.getRestaurant().getId() == restaurantid).toList();
+  }
+  @GetMapping("status/{status}")
+  public Iterable<Order> getOrdrByType(@RequestAttribute("restaurantid") int restaurantid, @PathVariable String status) {
+  
+      Iterable<Order> filteredOrders = repo.findAll().stream()
+              .filter(order -> order.getRestaurant().getId()==restaurantid) // Filter by user name
+              .filter(order -> "null".equals(status) || "all".equals(status) || order.getStatus().equals(status)) // Filter by status
+              .toList();
+  
+      return filteredOrders;
+  }
+  @PostMapping("{id}/updateStatus/{status}")
+  public void updatestatus(@RequestAttribute("restaurantid") int restauranid,@PathVariable String status,@PathVariable int id) {
+    Order order = repo.findById(id).orElseThrow();
+    order.setStatus(status);
+    repo.save(order);
 
+  }
+  @GetMapping("/getProcessed")
+  public Iterable<Order> getOrdersProcessed(@RequestAttribute("restaurantid") int restaurantid) {
+    Iterable<Order> orders = repo.findAll().stream().filter(e -> e.getRestaurant().getId() == restaurantid).toList();
+
+    System.out.println(orders);
+    return orders;
   }
 
   @PostMapping

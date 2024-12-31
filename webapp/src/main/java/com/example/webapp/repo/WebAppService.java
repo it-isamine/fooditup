@@ -9,6 +9,7 @@ import com.example.webapp.model.MenuItems;
 import com.example.webapp.model.Order;
 import com.example.webapp.model.Restaurant;
 import com.example.webapp.model.RestaurantDto;
+import com.example.webapp.model.RestaurantItem;
 import com.example.webapp.model.User;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -57,13 +58,13 @@ public class WebAppService {
         }
     }
 
-    public Iterable<Restaurant> getRestaurant() {
+    public Iterable<RestaurantDto> getRestaurant() {
 
-        ResponseEntity<Iterable<Restaurant>> responseEntity = restTemplate.exchange(
-                "http://localhost:8090/restaurants",
+        ResponseEntity<Iterable<RestaurantDto>> responseEntity = restTemplate.exchange(
+                "http://localhost:8090/restaurants/getresto",
                 HttpMethod.GET,
                 null, // Pass any required HttpEntity (like headers) here, or null if not needed
-                new ParameterizedTypeReference<Iterable<Restaurant>>() {
+                new ParameterizedTypeReference<Iterable<RestaurantDto>>() {
                 });
 
         return responseEntity.getBody();
@@ -101,7 +102,7 @@ public class WebAppService {
         // Include the order object in the request body
         HttpEntity<User> entity = new HttpEntity<>(user, headers);
 
-        ResponseEntity<Void> response = restTemplate.exchange("http://localhost:8090/users/users",
+        ResponseEntity<Void> response = restTemplate.exchange("http://localhost:8090/users/self",
                 HttpMethod.PUT, entity, Void.class);
 
     }
@@ -169,14 +170,24 @@ public class WebAppService {
         return response.getBody();
     }
 
-    public Iterable<Order> getORdersOfUser(String token) {
+    public Iterable<Order> getORdersOfUser(String token,String status) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token); // Add the token to the header
         HttpEntity<String> entity = new HttpEntity<>(headers);
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Iterable<Order>> response = restTemplate.exchange("http://localhost:8090/orders/user",
+        ResponseEntity<Iterable<Order>> response = restTemplate.exchange("http://localhost:8090/orders/user/"+status,
                 HttpMethod.GET, entity, new ParameterizedTypeReference<Iterable<Order>>() {
                 });
+        System.out.println("Response from gateway: " + response.getBody());
+        return response.getBody();
+    }
+    public Order getOrder(String token,int id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token); // Add the token to the header
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Order> response = restTemplate.exchange("http://localhost:8090/orders/"+id,
+                HttpMethod.GET, entity,Order.class);
         System.out.println("Response from gateway: " + response.getBody());
         return response.getBody();
     }
@@ -234,18 +245,41 @@ public class WebAppService {
         return response.getBody();
     }
 
-    public Iterable<MenuItems> getItems(String token) {
+    public Iterable<RestaurantItem> getItems(String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token); // Add the token to the header
         HttpEntity<String> entity = new HttpEntity<>(headers);
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Iterable<MenuItems>> response = restTemplate.exchange(
-                "http://localhost:8090/restaurants/frenquently/items", HttpMethod.GET, entity,
-                new ParameterizedTypeReference<Iterable<MenuItems>>() {
+        ResponseEntity<Iterable<RestaurantItem>> response = restTemplate.exchange(
+                "http://localhost:8090/restaurants/frenquently/itemz", HttpMethod.GET, entity,
+                new ParameterizedTypeReference<Iterable<RestaurantItem>>() {
                 });
         return response.getBody();
     }
+    public Iterable<RestaurantItem> getItemRest(String token,int id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token); // Add the token to the header
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Iterable<RestaurantItem>> response = restTemplate.exchange(
+                "http://localhost:8090/restaurants/"+id+"/items", HttpMethod.GET, entity,
+                new ParameterizedTypeReference<Iterable<RestaurantItem>>() {
+                });
+        return response.getBody();
+    }
+    // public void updateUser(User user,String token) {
+    //     HttpHeaders headers = new HttpHeaders();
+    //     headers.set("Authorization", "Bearer " + token); // Add the token to the header
+    //     headers.setContentType(MediaType.APPLICATION_JSON); // Set the content type to JSON
 
+    //     // Include the order object in the request body
+    //     HttpEntity<User> entity = new HttpEntity<>(user, headers);
+    //     RestTemplate restTemplate = new RestTemplate();
+    //     ResponseEntity<Void> response = restTemplate.exchange("http://localhost:8090/users/users/update", HttpMethod.PUT,entity,Void.class);
+
+    // }
+
+   
     public Iterable<MenuItems> getrestoItems(String token, int restaurantid) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token); // Add the token to the header
@@ -254,6 +288,17 @@ public class WebAppService {
         ResponseEntity<Iterable<MenuItems>> response = restTemplate.exchange(
                 "http://localhost:8090/restaurants/" + restaurantid + "/getitems", HttpMethod.GET, entity,
                 new ParameterizedTypeReference<Iterable<MenuItems>>() {
+                });
+        return response.getBody();
+    }
+    public Iterable<RestaurantItem> getrestoItemz(String token, int restaurantid) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token); // Add the token to the header
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Iterable<RestaurantItem>> response = restTemplate.exchange(
+                "http://localhost:8090/restaurants/" + restaurantid + "/getitemz", HttpMethod.GET, entity,
+                new ParameterizedTypeReference<Iterable<RestaurantItem>>() {
                 });
         return response.getBody();
     }

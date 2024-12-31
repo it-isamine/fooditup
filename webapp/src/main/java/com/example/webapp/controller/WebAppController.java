@@ -28,6 +28,7 @@ import com.example.webapp.model.RegisterForm;
 import com.example.webapp.model.RestItem;
 import com.example.webapp.model.Restaurant;
 import com.example.webapp.model.RestaurantDto;
+import com.example.webapp.model.RestaurantItem;
 import com.example.webapp.model.User;
 import com.example.webapp.repo.WebAppService;
 import com.example.webapp.service.JWTService;
@@ -58,7 +59,7 @@ public class WebAppController {
             HttpServletRequest request) {
 
         request.getSession().setAttribute("jwt", token);
-        Iterable<MenuItems> items = webAppService.getItems(token);
+        Iterable<RestaurantItem> items = webAppService.getItems(token);
         Iterable<RestaurantDto> restaurants = webAppService.getRestaurantDto(token);
         User user = webAppService.getUser(token);
 
@@ -85,11 +86,11 @@ public class WebAppController {
 
     }
 
-    @GetMapping("/profile")
-    public String getProfile(Model model, HttpServletRequest request) {
+    @GetMapping("/profile/{status}")
+    public String getProfile(Model model, HttpServletRequest request, @PathVariable String status) {
         String token = (String) request.getSession().getAttribute("jwt");
         User user = webAppService.getUser(token);
-        Iterable<Order> orders = webAppService.getORdersOfUser(token);
+        Iterable<Order> orders = webAppService.getORdersOfUser(token,status);
         model.addAttribute("user", user);
         model.addAttribute("orders", orders);
         System.out.println(orders);
@@ -142,18 +143,40 @@ public class WebAppController {
         return new ModelAndView("redirect:/home");
 
     }
+    @GetMapping("/orders/{id}")
+    public String orderDetails(@PathVariable int id,HttpServletRequest request,Model model) {
+        String token = (String) request.getSession().getAttribute("jwt");
+        Order order = webAppService.getOrder(token, id);
+        model.addAttribute("order",order);
+        return "view";
+    }
 
     @GetMapping("/restaurant/{id}")
     public String getResto(Model model, @PathVariable int id, HttpServletRequest request) {
         String token = (String) request.getSession().getAttribute("jwt");
         System.out.println("aezefrr");
         Restaurant restaurant = webAppService.gRestaurant(id);
-        Iterable<MenuItems> items = webAppService.getrestoItems(token, id);
+        Iterable<RestaurantItem> itemz = webAppService.getItemRest(token, id);
+        Iterable<RestaurantItem> items = webAppService.getrestoItemz(token, id);
         System.out.println("tttttttttttttttttttttt" + restaurant);
         model.addAttribute("restaurant", restaurant);
-        model.addAttribute("itemz", items);
+        model.addAttribute("restaurantItems", items);
+        model.addAttribute("itemz", itemz);
+
         return "restaurant";
 
+    }
+    @GetMapping("/edit-profile")
+    public String editProfile(Model model) {
+        User user = new User();
+        model.addAttribute("user",user);
+        return "edit-profile";
+    }
+    @PostMapping("/profile/update")
+    public ModelAndView update(@ModelAttribute User user,HttpServletRequest request) {
+        String token = (String) request.getSession().getAttribute("jwt");
+       webAppService.updateUser(user, token);
+        return new ModelAndView("redirect:/profile");
     }
 
     @GetMapping("/log")
@@ -162,12 +185,19 @@ public class WebAppController {
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam("query") String query, Model model) {
+    public String search(@RequestParam("query") String query, Model model,HttpServletRequest request) {
         int threshold = 2; // Allow up to 2 typo differences
-        List<Restaurant> fuzzyRestaurants = (List<Restaurant>) searchService.searchRestaurantsFuzzy(query, threshold);
+        List<RestaurantDto> fuzzyRestaurants = (List<RestaurantDto>) searchService.searchRestaurantsFuzzy(query, threshold);
         System.out.println(fuzzyRestaurants);
-        model.addAttribute("query", query);
         model.addAttribute("restaurants", fuzzyRestaurants);
+        String token =(String) request.getSession().getAttribute("jwt");
+        Iterable<RestaurantItem> items = webAppService.getItems(token);
+        User user = webAppService.getUser(token);
+
+        model.addAttribute("employee", user);
+        model.addAttribute("itemz", items);
+        
+        
         return "home";
     }
 

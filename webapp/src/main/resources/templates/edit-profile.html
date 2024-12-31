@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - Food it up</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body class="bg-light min-vh-100 d-flex flex-column">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <i class="bi bi-egg-fried me-2"></i>Food it up Admin
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center" th:href="@{/admin/dashboard}">
+                            <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center" th:href="@{/users}">
+                            <i class="bi bi-people me-2"></i>Users
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center" th:href="@{/restaurants}">
+                            <i class="bi bi-shop me-2"></i>Restaurants
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active d-flex align-items-center" th:href="@{/profile}">
+                            <i class="bi bi-person me-2"></i>Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center" th:href="@{/logout}">
+                            <i class="bi bi-box-arrow-right me-2"></i>Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <h2 class="text-center mb-4">Edit Profile</h2>
+                
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <form id="profileForm" th:action="@{/profile/update}" method="post" th:object="${user}">
+                            <!-- Personal Information Section -->
+                            <h5 class="card-title mb-3">Personal Information</h5>
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="name" name="name" >
+                            </div>
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" >
+                            </div>
+
+                            <hr class="my-4">
+
+                            <!-- Email Section -->
+                            <h5 class="card-title mb-3">Email</h5>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="email" name="email" >
+                            </div>
+
+                            <hr class="my-4">
+
+                            <!-- Password Section -->
+                            <h5 class="card-title mb-3">Change Password</h5>
+                            <div class="mb-3">
+                                <label for="currentPassword" class="form-label">Current Password</label>
+                                <input type="password" class="form-control" id="currentPassword" name="currentPassword">
+                            </div>
+                            <div class="mb-3">
+                                <label for="newPassword" class="form-label">New Password</label>
+                                <input type="password" class="form-control" id="newPassword" name="newPassword">
+                            </div>
+                            <div class="mb-3">
+                                <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+                            </div>
+
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="btn btn-danger">Update Profile</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white py-4 mt-auto border-top">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <p class="mb-0">&copy; <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2024</span> Food it up. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="#" class="text-muted me-3"><i class="bi bi-question-circle"></i> Help Center</a>
+                    <a href="#" class="text-muted"><i class="bi bi-envelope"></i> Contact Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- <script>
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const updatedData = {};
+            
+            for (let [key, value] of formData.entries()) {
+                if (value !== '' && 
+                    (key === 'name' || key === 'phone' || key === 'email' || 
+                     (key === 'newPassword' && document.getElementById('currentPassword').value !== ''))) {
+                    updatedData[key] = value;
+                }
+            }
+            
+            if (Object.keys(updatedData).length === 0) {
+                alert('No changes detected. Please modify at least one field to update your profile.');
+                return;
+            }
+            
+            if (updatedData.newPassword && updatedData.newPassword !== formData.get('confirmPassword')) {
+                alert('New password and confirm password do not match.');
+                return;
+            }
+            
+            fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Profile updated successfully!');
+                    location.reload();
+                } else {
+                    alert('Error updating profile: ' + data.message);
+                }
+            })
+           
+        });
+    </script> -->
+</body>
+
+</html>

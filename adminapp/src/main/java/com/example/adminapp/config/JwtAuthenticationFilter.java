@@ -80,25 +80,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-    private Claims validateTokenAndGetClaims(String token) {
-        try {
-            // Use the JwtParserBuilder correctly in newer versions (v0.11 and above)
-            JwtParser parser = Jwts.parser()
-                    .setSigningKey(secretKey)
-                    .build(); // Build the JwtParser
-            return parser.parseClaimsJws(token).getBody(); // Parse the token and extract claims
-        } catch (ExpiredJwtException e) {
-            System.out.println("Token expired: " + e.getMessage());
-        } catch (UnsupportedJwtException e) {
-            System.out.println("Unsupported JWT: " + e.getMessage());
-        } catch (MalformedJwtException e) {
-            System.out.println("Malformed JWT: " + e.getMessage());
-        } catch (SignatureException e) {
-            System.out.println("Invalid signature: " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("JWT parsing error: " + e.getMessage());
-        }
-        return null; // Return null if the token is invalid
-    }
+    // private Claims validateTokenAndGetClaims(String token) {
+    //     try {
+    //         // Use the JwtParserBuilder correctly in newer versions (v0.11 and above)
+    //         JwtParser parser = Jwts.parser()
+    //                 .setSigningKey(secretKey)
+    //                 .build(); // Build the JwtParser
+    //         return parser.parseClaimsJws(token).getBody(); // Parse the token and extract claims
+    //     } catch (ExpiredJwtException e) {
+    //         System.out.println("Token expired: " + e.getMessage());
+    //     } catch (UnsupportedJwtException e) {
+    //         System.out.println("Unsupported JWT: " + e.getMessage());
+    //     } catch (MalformedJwtException e) {
+    //         System.out.println("Malformed JWT: " + e.getMessage());
+    //     } catch (SignatureException e) {
+    //         System.out.println("Invalid signature: " + e.getMessage());
+    //     } catch (Exception e) {
+    //         System.out.println("JWT parsing error: " + e.getMessage());
+    //     }
+    //     return null; // Return null if the token is invalid
+    // }
 
 }

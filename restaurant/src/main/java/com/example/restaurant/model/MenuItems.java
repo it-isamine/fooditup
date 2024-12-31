@@ -34,6 +34,9 @@ public class MenuItems {
     private List<RestaurantItem> restaurantItems = new ArrayList<>();
 
     private Boolean availability;
+    
+    @Column(name = "image_url")
+    private String imageurl;
 
     @PrePersist
     public void assignRandomId() {

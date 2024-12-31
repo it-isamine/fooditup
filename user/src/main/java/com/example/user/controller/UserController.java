@@ -128,6 +128,33 @@ public class UserController {
 			repo.save(usero);
 		}
 	}
+	@PutMapping("/self")
+public void updateSelf(@RequestAttribute("userid") String userid, @RequestBody User user) {
+    User usero = repo.findByName(userid).orElseThrow();
+
+    // Update fields only if they are not null or empty
+    if (isValid(user.getName())) {
+        usero.setName(user.getName());
+    }
+    if (isValid(user.getEmail())) {
+        usero.setEmail(user.getEmail());
+    }
+    if (isValid(user.getPhone())) {
+        usero.setPhone(user.getPhone());
+    }
+    if (isValid(user.getPassword())) {
+        String encryptedPassword = passwordEncoder.encode(user.getPassword());
+        usero.setPassword(encryptedPassword);
+    }
+
+    repo.save(usero);
+}
+
+private boolean isValid(String value) {
+    return value != null && !value.trim().isEmpty();
+}
+
+
 
 	@GetMapping("/users/{name}")
 	public Object getUserByName(@PathVariable("name") String name) {

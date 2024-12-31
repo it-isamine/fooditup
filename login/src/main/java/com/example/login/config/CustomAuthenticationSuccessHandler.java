@@ -34,8 +34,13 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                 .map(GrantedAuthority::getAuthority)
                 .anyMatch(role -> role.equals("ROLE_CUSTOMER"))) {
             redirectUrl = "http://localhost:9771/home";
-        } else {
+        } else if(userDetails.getAuthorities().stream()
+        .map(GrantedAuthority::getAuthority)
+        .anyMatch(role -> role.equals("ROLE_ADMIN"))) {
             redirectUrl = "http://localhost:9772/admin/home";
+        }
+        else {
+            redirectUrl = "http://localhost:9773/restaurant-admin/home";
         }
 
         String encodedRedirectUrl = URLEncoder.encode(redirectUrl, StandardCharsets.UTF_8.toString());

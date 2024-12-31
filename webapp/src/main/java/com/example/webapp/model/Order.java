@@ -13,6 +13,7 @@ public class Order {
     private Restaurant restaurant;
     private List<MenuItems> items;
     private LocalDateTime createdAt;
+    private String status;
     
    public Order() {
     this.items = new ArrayList<>();

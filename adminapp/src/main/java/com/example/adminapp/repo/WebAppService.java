@@ -55,11 +55,16 @@ public class WebAppService {
             return "An unexpected error occurred.";
         }
     }
+    public void setVisibility(int id) {
+      
+        ResponseEntity<Void> response = restTemplate.exchange("http://localhost:8090/restaurants/visibility/"+id, HttpMethod.POST, null, Void.class);
+
+    }
 
     public Iterable<Restaurant> getRestaurant() {
 
         ResponseEntity<Iterable<Restaurant>> responseEntity = restTemplate.exchange(
-                "http://localhost:8090/restaurants/admin",
+                "http://localhost:8090/restaurants/adminn",
                 HttpMethod.GET,
                 null, // Pass any required HttpEntity (like headers) here, or null if not needed
                 new ParameterizedTypeReference<Iterable<Restaurant>>() {

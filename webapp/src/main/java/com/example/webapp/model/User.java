@@ -10,6 +10,7 @@ public class User {
     String name;
     String email;
     String password;
+    String phone;
     String role;
     Restaurant restaurant;
 

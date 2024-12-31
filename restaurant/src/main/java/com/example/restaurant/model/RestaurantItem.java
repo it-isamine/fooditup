@@ -22,7 +22,7 @@ public class RestaurantItem {
 
     @ManyToOne
     @JoinColumn(name = "restaurantid")
-    @JsonIgnore
+    
     private Restaurant restaurant;
 
     @ManyToOne(cascade = CascadeType.ALL)

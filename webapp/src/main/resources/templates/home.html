@@ -11,11 +11,13 @@
     <link href="styles.css" rel="stylesheet">
 </head>
 
-<body class="bg-light">
+<body class="bg-light d-flex flex-column min-vh-100">
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
         <div class="container">
-            <a class="navbar-brand text-danger fw-bold fs-4" href="/home">Food it up</a>
+            <a class="navbar-brand text-danger fw-bold fs-4" href="/home">
+                <i class="bi bi-egg-fried me-2"></i>Food it up
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -42,7 +44,7 @@
                     <li class="nav-item dropdown">
                         <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="filterDropdown"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            Filters
+                            <i class="bi bi-funnel me-1"></i>Filters
                         </button>
                         <div class="dropdown-menu p-3" aria-labelledby="filterDropdown">
                             <form id="filterForm">
@@ -87,13 +89,19 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/profile}">Profile</a>
+                        <a class="nav-link" th:href="@{/profile/null}">
+                            <i class="bi bi-person-circle me-1"></i>Profile
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-danger" th:href="@{/inventory}">Cart</a>
+                        <a class="btn btn-danger" th:href="@{/inventory}">
+                            <i class="bi bi-cart-fill me-1"></i>Cart
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/log}">Logout</a>
+                        <a class="nav-link" th:href="@{/log}">
+                            <i class="bi bi-box-arrow-right me-1"></i>Logout
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -145,11 +153,21 @@
         <div class="card shadow-sm mb-4">
             <div class="card-body">
                 <div class="d-flex justify-content-center flex-wrap gap-2">
-                    <button class="btn btn-outline-danger rounded-pill" data-category="pizza">Pizza</button>
-                    <button class="btn btn-outline-danger rounded-pill" data-category="burger">Burgers</button>
-                    <button class="btn btn-outline-danger rounded-pill" data-category="sushi">Sushi</button>
-                    <button class="btn btn-outline-danger rounded-pill" data-category="vegetarian">Vegetarian</button>
-                    <button class="btn btn-outline-danger rounded-pill" data-category="dessert">Desserts</button>
+                    <button class="btn btn-outline-danger rounded-pill" data-category="pizza">
+                        <i class="bi bi-circle-fill me-1" style="color: #FFA500;"></i>Pizza
+                    </button>
+                    <button class="btn btn-outline-danger rounded-pill" data-category="burger">
+                        <i class="bi bi-circle-fill me-1" style="color: #8B4513;"></i>Burgers
+                    </button>
+                    <button class="btn btn-outline-danger rounded-pill" data-category="sushi">
+                        <i class="bi bi-circle-fill me-1" style="color: #FF69B4;"></i>Sushi
+                    </button>
+                    <button class="btn btn-outline-danger rounded-pill" data-category="vegetarian">
+                        <i class="bi bi-circle-fill me-1" style="color: #228B22;"></i>Vegetarian
+                    </button>
+                    <button class="btn btn-outline-danger rounded-pill" data-category="dessert">
+                        <i class="bi bi-circle-fill me-1" style="color: #8A2BE2;"></i>Desserts
+                    </button>
                 </div>
                 <div class="mt-3 text-center">
                     <small class="text-muted">Recent searches:</small>
@@ -160,117 +178,146 @@
     </div>
 
     <div class="container py-5">
-        <div class="card shadow-sm mb-4">
-            <div class="card-body">
-                <h2 class="card-title"> <span th:text="#{welcome.message}">Welcome,</span> <span
-                        th:text="${employee.name}">Customer</span>!</h2>
-                <p class="card-text">Ready to explore delicious food options?</p>
-            </div>
-        </div>
+        <div class="row">
+            <!-- Main content -->
+            <div class="col-lg-9">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h2 class="card-title"> <span th:text="#{welcome.message}">Welcome,</span> <span
+                                th:text="${employee.name}">Customer</span>!</h2>
+                        <p class="card-text">Ready to explore delicious food options?</p>
+                    </div>
+                </div>
 
-        <!-- Popular Categories -->
-        <section class="mb-5">
-            <h2 class="text-center mb-4" th:text="#{part.category}">Popular Categories</h2>
-            <div class="row g-4">
-                <div class="col-6 col-md-3">
-                    <div class="card h-100 border-0 shadow-sm text-center">
-                        <div class="card-body">
-                            <img src="https://via.placeholder.com/64" alt="Pizza" class="mb-3">
-                            <h5>Pizza</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="card h-100 border-0 shadow-sm text-center">
-                        <div class="card-body">
-                            <img src="https://via.placeholder.com/64" alt="Burgers" class="mb-3">
-                            <h5>Burgers</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="card h-100 border-0 shadow-sm text-center">
-                        <div class="card-body">
-                            <img src="https://via.placeholder.com/64" alt="Sushi" class="mb-3">
-                            <h5>Sushi</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="card h-100 border-0 shadow-sm text-center">
-                        <div class="card-body">
-                            <img src="https://via.placeholder.com/64" alt="Desserts" class="mb-3">
-                            <h5>Desserts</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Frequently Ordered -->
-        <div class="card shadow-sm mb-4">
-            <div class="card-body">
-                <section class="frequently-ordered-section">
-                    <h2 class="text-center mb-4" th:text="#{part.latest}">Frequently Ordered</h2>
+                <!-- Popular Categories -->
+                <section class="mb-5">
+                    <h2 class="text-center mb-4" th:text="#{part.category}">Popular Categories</h2>
                     <div class="row g-4">
-                        <div class="col-md-6 col-lg-4" th:each="item : ${itemz}">
+                        <div class="col-6 col-md-3">
+                            <div class="card h-100 border-0 shadow-sm text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-pizza text-danger" style="font-size: 3rem;"></i>
+                                    <h5 class="mt-3">Pizza</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card h-100 border-0 shadow-sm text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-egg-fried text-warning" style="font-size: 3rem;"></i>
+                                    <h5 class="mt-3">Burgers</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card h-100 border-0 shadow-sm text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-cup-straw text-info" style="font-size: 3rem;"></i>
+                                    <h5 class="mt-3">Sushi</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card h-100 border-0 shadow-sm text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-cake2 text-success" style="font-size: 3rem;"></i>
+                                    <h5 class="mt-3">Desserts</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Restaurants Section -->
+                <section class="mb-5">
+                    <h2 class="text-center mb-4" th:text="#{part.restaurant}">Featured Restaurants</h2>
+                    <div class="row g-4">
+                        <div class="col-md-6 col-lg-4" th:each="restaurant : ${restaurants}">
                             <div class="card h-100 shadow-sm">
-                                <form method="post" th:action="@{/addtoInventory}" th:object="${restitem}">
-                                    <img class="card-img-top" src="https://via.placeholder.com/300x200" alt="Food item">
-                                    <div class="card-body">
-                                        <input type="hidden" th:name="name" th:value="${item.name}">
-                                        <input type="hidden" th:name="description" th:value="${item.description}">
-                                        <h4 class="card-title h5 mb-2" th:text="${item.name}">Item Name</h4>
-                                        <p class="card-text small text-muted mb-2" th:text="${item.description}">
-                                            Description</p>
-                                        <button type="submit" class="btn btn-danger btn-sm mt-2">Add to Cart</button>
-                                    </div>
-                                </form>
+                                <img class="card-img-top"
+                                    th:src="${restaurant.imageurl != null ? restaurant.imageurl : 'https://via.placeholder.com/300x200'}"
+                                    alt="Restaurant">
+                                <div class="card-body">
+                                    <h3 class="card-title h5" th:text="${restaurant.name}">Restaurant Name</h3>
+                                    <p class="card-text">
+                                        <i class="bi bi-star-fill text-warning"></i>
+                                        <span class="ms-1">4.5</span>
+                                        <span class="ms-2 text-muted">(200+ reviews)</span>
+                                    </p>
+                                    <p class="card-text">
+                                        <i class="bi bi-geo-alt text-secondary"></i>
+                                        <span class="ms-1">2.5 km<span class="ms-1">2.5 km away</span>
+                                    </p>
+                                    <a th:href="@{/restaurant/{id}(id=${restaurant.restaurantid})}"
+                                        class="btn btn-outline-danger mt-3">
+                                        <i class="bi bi-menu-button-wide me-1"></i>View Menu
+                                    </a>
+                                    <form th:action="@{/follow/{restaurantId}(restaurantId=${restaurant.restaurantid})}"
+                                        method="post" th:if="${!restaurant.followedByCurrentUser}">
+                                        <button type="submit" class="btn btn-outline-success mt-2">
+                                            <i class="bi bi-heart me-1"></i>Follow
+                                        </button>
+                                    </form>
+                                    <form th:action="@{/unfollow/{restaurantId}(restaurantId=${restaurant.restaurantid})}"
+                                        method="post" th:if="${restaurant.followedByCurrentUser}">
+                                        <button type="submit" class="btn btn-outline-danger mt-2">
+                                            <i class="bi bi-heart-fill me-1"></i>Unfollow
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </section>
             </div>
-        </div>
 
-        <!-- Restaurants Section -->
-        <section class="mb-5">
-            <h2 class="text-center mb-4" th:text="#{part.restaurant}">Featured Restaurants</h2>
-            <div class="row g-4">
-                <div class="col-md-6 col-lg-4" th:each="restaurant : ${restaurants}">
-                    <div class="card h-100 shadow-sm">
-                        <img class="card-img-top"
-                            th:src="${restaurant.imageurl != null ? restaurant.imageurl : 'https://via.placeholder.com/300x200'}"
-                            alt="Restaurant">
-                        <div class="card-body">
-                            <h3 class="card-title h5" th:text="${restaurant.name}">Restaurant Name</h3>
-                            <a th:href="@{/restaurant/{id}(id=${restaurant.restaurantid})}"
-                                class="btn btn-danger mt-3">View Menu</a>
-                            <form th:action="@{/follow/{restaurantId}(restaurantId=${restaurant.restaurantid})}"
-                                method="post" th:if="${!restaurant.followedByCurrentUser}">
-                                <button type="submit" class="btn btn-success mt-2">Follow</button>
-                            </form>
-                            <form th:action="@{/unfollow/{restaurantId}(restaurantId=${restaurant.restaurantid})}"
-                                method="post" th:if="${restaurant.followedByCurrentUser}">
-                                <button type="submit" class="btn btn-danger mt-2">Unfollow</button>
-                            </form>
-                        </div>
+            <!-- Frequently Ordered moved to the side -->
+            <div class="col-lg-3">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <section class="frequently-ordered-section">
+                            <h2 class="text-center mb-4" th:text="#{part.latest}">Frequently Ordered</h2>
+                            <div class="row g-4">
+                                <div class="col-12" th:each="item : ${itemz}">
+                                    <ul class="list-unstyled">
+                                        <li class="mb-3">
+                                            <div>
+                                                <h5 class="mb-1" th:text="${item.item.name}">Item Name</h5>
+                                                <p class="text-muted mb-1" th:text="${item.item.description}">Description</p>
+                                                <p class="mb-2">
+                                                    <i class="bi bi-tag-fill text-danger me-1"></i>
+                                                    Price: <span th:text="${item.price}">$0.00</span>
+                                                </p>
+                                            </div>
+                                            <form method="post" th:action="@{/addtoInventory}">
+                                                <input type="hidden" name="menuid" th:value="${item.item.id}">
+                                                <input type="hidden" name="restaurantid" th:value="${item.restaurant.id}">
+                                                <input type="hidden" name="price" th:value="${item.price}">
+                                                <button type="submit" class="btn btn-outline-danger rounded-pill mt-auto">
+                                                    <i class="bi bi-cart-plus me-1"></i>Add to Cart
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     </div>
 
-    <footer class="bg-dark text-light py-4 mt-5">
+    <footer class="bg-dark text-light py-5 mt-auto">
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
-                    <h5>About Food it up</h5>
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="mb-3">About Food it up</h5>
                     <p class="small">Your favorite food delivery service bringing delicious meals right to your
-                        doorstep.</p>
+                        doorstep. We connect you with the best local restaurants and ensure a seamless ordering experience.</p>
                 </div>
-                <div class="col-md-4">
-                    <h5>Quick Links</h5>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h5 class="mb-3">Quick Links</h5>
                     <ul class="list-unstyled">
                         <li><a href="#" class="text-light text-decoration-none">About Us</a></li>
                         <li><a href="#" class="text-light text-decoration-none">Contact</a></li>
@@ -278,18 +325,37 @@
                         <li><a href="#" class="text-light text-decoration-none">Privacy Policy</a></li>
                     </ul>
                 </div>
-                <div class="col-md-4">
-                    <h5>Contact Us</h5>
-                    <p class="small">Email: info@fooditup.com<br>Phone: (555) 123-4567</p>
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <h5 class="mb-3">Contact Us</h5>
+                    <p class="small">
+                        <i class="bi bi-envelope me-2"></i>Email: info@fooditup.com<br>
+                        <i class="bi bi-telephone me-2"></i>Phone: (555) 123-4567
+                    </p>
                 </div>
-                <div class="col-md-4">
-                    <h5>Languages</h5>
-                    <a th:href="@{/home?lang=en}" class="text-light text-decoration-none">English</a> |
-                    <a th:href="@{/home?lang=fr}" class="text-light text-decoration-none">French</a>
+                <div class="col-md-3">
+                    <h5 class="mb-3">Languages</h5>
+                    <div class="d-flex">
+                        <a th:href="@{/home?lang=en}" class="text-light text-decoration-none me-3">
+                            <i class="bi bi-globe me-1"></i>English
+                        </a>
+                        <a th:href="@{/home?lang=fr}" class="text-light text-decoration-none">
+                            <i class="bi bi-globe me-1"></i>French
+                        </a>
+                    </div>
                 </div>
             </div>
-            <hr class="mt-4">
-            <p class="text-center mb-0">&copy; 2023 Food it up. All rights reserved.</p>
+            <hr class="my-4">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <p class="mb-0">&copy; 2023 Food it up. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="#" class="text-light me-3"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="text-light me-3"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="text-light me-3"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="text-light"><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
         </div>
     </footer>
 

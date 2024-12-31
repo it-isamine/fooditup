@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 import com.example.restaurant.repo.*;
+import com.example.restaurant.adminrepo.AdminRepo;
 import com.example.restaurant.model.*;
 
 @RestController
@@ -42,15 +43,30 @@ public class RestaurantController {
 
   @Autowired
   FollowedRepo fRepo;
+  @Autowired
+  AdminRepo aRepo;
 
   @GetMapping("/names")
   public ResponseEntity<Iterable<String>> getRestaurantsNames() {
     return ResponseEntity.status(HttpStatus.OK).body(repo.findAll().stream().map(y -> y.getName().toString()).toList());
   }
+  @GetMapping("/adminn")
+  public Iterable<com.example.restaurant.adminmodel.Restaurant> gett() {
+    return aRepo.findAll();
+  }
 
   @GetMapping("/search/{name}")
   public Restaurant searchResto(@PathVariable String name) {
     return repo.findByName(name).orElseThrow();
+  }
+  @PostMapping("/visibility/{id}")
+  public void isenable(@PathVariable int id) {   
+      com.example.restaurant.adminmodel.Restaurant restau = aRepo.findById(id).orElseThrow();
+     
+     boolean visibility= !restau.getIsEnable();
+      restau.setIsEnable(visibility);
+      aRepo.save(restau);
+    
   }
 
   @GetMapping("/user-info")
@@ -65,6 +81,35 @@ public class RestaurantController {
   @GetMapping("/admin")
   public Iterable<Restaurant> getRestaurantz() {
     return repo.findAll();
+  }
+  @GetMapping("/getresto")
+  public Iterable<RestaurantDto> getResto() {
+    List<RestaurantDto> restaurants = repo.findAll()
+    .stream()
+    .map(restaurant -> {
+      RestaurantDto dto = new RestaurantDto();
+      dto.setRestaurantid(restaurant.getId());
+      dto.setName(restaurant.getName());
+      dto.setImageurl(restaurant.getImageurl());
+
+      return dto;
+    })
+    .collect(Collectors.toList());
+ 
+    List<String> enabledRestaurantNames = aRepo.findAll().stream()
+.filter(e -> Boolean.TRUE.equals(e.getIsEnable())) // Null-safe comparison
+.map(e -> e.getName())
+.toList();
+
+System.out.println(enabledRestaurantNames);
+
+List<RestaurantDto> filteredRestaurants = restaurants.stream()
+.filter(e -> enabledRestaurantNames.contains(e.getName())) // Ensure terminal operation
+.toList();
+
+
+System.out.println(restaurants);
+return filteredRestaurants;
   }
 
   @GetMapping
@@ -82,8 +127,21 @@ public class RestaurantController {
           return dto;
         })
         .collect(Collectors.toList());
-    System.out.println(restaurants);
-    return restaurants;
+     
+        List<String> enabledRestaurantNames = aRepo.findAll().stream()
+    .filter(e -> Boolean.TRUE.equals(e.getIsEnable())) // Null-safe comparison
+    .map(e -> e.getName())
+    .toList();
+
+System.out.println(enabledRestaurantNames);
+
+List<RestaurantDto> filteredRestaurants = restaurants.stream()
+    .filter(e -> enabledRestaurantNames.contains(e.getName())) // Ensure terminal operation
+    .toList();
+
+
+System.out.println(restaurants);
+    return filteredRestaurants;
   }
 
   @PostMapping("/follow/{restaurantid}")
@@ -146,10 +204,18 @@ public class RestaurantController {
   }
 
   @GetMapping("/frenquently/items")
-  public Iterable<MenuItems> getItems(@RequestAttribute("userid") String userid) {
+  public Iterable<RestaurantItem> getItems(@RequestAttribute("userid") String userid) {
     User user = restTemplate.getForObject("http://localhost:9091/users/users/" + userid, User.class);
     System.out.println(user);
-    return mRepo.findMostFrequentItemsByUser(user.getId());
+    List<MenuItems> items = mRepo.findMostFrequentItemsByUser(user.getId());
+    return restaurantItemRepo.findAll().stream().filter(e->items.contains(e.getItem())).toList();
+  }
+  @GetMapping("/frenquently/itemz")
+  public Iterable<RestaurantItem> getItemz(@RequestAttribute("userid") String userid) {
+    User user = restTemplate.getForObject("http://localhost:9091/users/users/" + userid, User.class);
+    System.out.println(user);
+    return restaurantItemRepo.findMostFrequentItemsByUser(user.getId());
+   
   }
 
   @GetMapping("/{id}/getitems")
@@ -158,7 +224,18 @@ public class RestaurantController {
     User user = restTemplate.getForObject("http://localhost:9091/users/users/" + userid, User.class);
     return mRepo.findMostFrequentItemsByUserAndRestaurant(user.getId(), restaurantid);
   }
-
+  @GetMapping("/{id}/getitemz")
+  public Iterable<RestaurantItem> getitemz(@PathVariable(name = "id") int restaurantid,
+      @RequestAttribute("userid") String userid) {
+    User user = restTemplate.getForObject("http://localhost:9091/users/users/" + userid, User.class);
+    return restaurantItemRepo.findMostFrequentItemsByUserAndRestaurant(user.getId(), restaurantid);
+  }
+  @GetMapping("/{id}/items")
+  public Iterable<RestaurantItem> getRestaurantitems(@PathVariable(name = "id") int restaurantid,
+      @RequestAttribute("userid") String userid) {
+    User user = restTemplate.getForObject("http://localhost:9091/users/users/" + userid, User.class);
+    return restaurantItemRepo.findAll().stream().filter(e->e.getRestaurant().getId()==restaurantid).toList();
+  }
   @PostMapping("/save")
   public void saveRestaurant(@RequestBody RestaurantDTO restaurantDTO) {
     System.out.println("dddddddddddddddd" + restaurantDTO);
@@ -275,6 +352,11 @@ public class RestaurantController {
     if (user.getRole().equals("ADMIN")) {
       repo.deleteById(id);
     }
+  }
+  @DeleteMapping("/item/{id}")
+  public void deleteItem(@PathVariable int id,@RequestAttribute("restaurantid")int restauranid) {
+   RestaurantItem item = restaurantItemRepo.findAll().stream().filter(e->e.getRestaurant().getId()==restauranid && e.getItem().getId()==id).findFirst().orElseThrow();
+   restaurantItemRepo.deleteById(item.getId());
   }
 
 }
