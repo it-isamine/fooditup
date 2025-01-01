@@ -3,6 +3,7 @@ package com.example.order.model;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +16,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+
 import lombok.Data;
 
 @Entity
@@ -35,9 +37,9 @@ public class Order {
     @JoinColumn(name = "restaurantid", nullable = false)
     private Restaurant restaurant;
 
-    @ManyToMany
-    @JoinTable(name = "ordermenuitems", joinColumns = @JoinColumn(name = "orderid"), inverseJoinColumns = @JoinColumn(name = "menuid"))
-    private List<MenuItems> items = new ArrayList<>();
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "ordersidemenu", joinColumns = @JoinColumn(name = "orderid"), inverseJoinColumns = @JoinColumn(name = "sidemenuid"))
+    private List<SideMenu> items = new ArrayList<>();
 
     @Column(name = "createdat")
     private LocalDateTime createdAt;
@@ -57,8 +59,8 @@ public class Order {
     @Override
     public String toString() {
         return "Order{id=" + id + ", user=" + (user != null ? user.getId() : "null") +
-                ", restaurant=" + (restaurant != null ? restaurant.getId() : "null") +  
-                ", status=" + status +              
+                ", restaurant=" + (restaurant != null ? restaurant.getId() : "null") +
+                ", status=" + status +
                 ", createdAt=" + createdAt + ", items="
                 + (items != null ? "Items list of size: " + items.size() : "No items") + "}";
     }

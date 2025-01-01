@@ -1,9 +1,12 @@
 package com.example.user.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
+
 import org.springframework.http.HttpStatus;
+
 import java.util.Map;
 
 @Data

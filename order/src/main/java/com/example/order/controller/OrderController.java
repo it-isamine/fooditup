@@ -1,14 +1,20 @@
 package com.example.order.controller;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
+
 import com.example.order.model.MenuItems;
 import com.example.order.model.Order;
+import com.example.order.model.OrderDto;
 import com.example.order.model.Restaurant;
+import com.example.order.model.SideMenu;
+import com.example.order.model.Sides;
 import com.example.order.model.User;
 import com.example.order.repo.OrderRepo;
+
 import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -34,60 +40,51 @@ public class OrderController {
 
   RestTemplate restTemplate = new RestTemplate();
 
-  @GetMapping
-  @Transactional
-  public Iterable<Order> getorderss() {
-    return repo.findAll();
-  }
-
-  @GetMapping("/{id}")
+  @GetMapping("/{id}") //exist
   public ResponseEntity<Order> getOrder(@PathVariable int id) {
     return ResponseEntity.status(HttpStatus.OK).body(repo.findById(id).orElseThrow());
   }
 
-
-  @GetMapping("/user/{status}")
+  @GetMapping("/user/{status}") //exist
   public Iterable<Order> getMyOrders(@RequestAttribute("userid") String userName, @PathVariable String status) {
-  
-      Iterable<Order> filteredOrders = repo.findAll().stream()
-              .filter(order -> order.getUser().getName().equals(userName)) // Filter by user name
-              .filter(order -> "null".equals(status) || "all".equals(status) || order.getStatus().equals(status)) // Filter by status
-              .toList();
-  
-      return filteredOrders;
-  }
-  
+    Iterable<Order> filteredOrders = repo.findAll().stream()
+        .filter(order -> order.getUser().getName().equals(userName)) // Filter by user name
+        .filter(order -> "null".equals(status) || "all".equals(status) || order.getStatus().equals(status)) // Filter by
+                                                                                                            // status
+        .toList();
 
-  @GetMapping("recently")
-  public List<MenuItems> getItems() {
-    return repo.findAll().stream()
-        .sorted(Comparator.comparing(Order::getCreatedAt).reversed()) // Sort Orders by createdAt descending
-        .flatMap(order -> order.getItems().stream()) // Extract MenuItems from each Order
-        .toList(); // Convert the result to a List
+    return filteredOrders;
   }
 
-  @GetMapping("/get")
+
+  @GetMapping("/get") //exist
   public Iterable<Order> getOrdersOfRestaurant(@RequestAttribute("restaurantid") int restaurantid) {
     return repo.findAll().stream().filter(e -> e.getRestaurant().getId() == restaurantid).toList();
   }
-  @GetMapping("status/{status}")
-  public Iterable<Order> getOrdrByType(@RequestAttribute("restaurantid") int restaurantid, @PathVariable String status) {
-  
-      Iterable<Order> filteredOrders = repo.findAll().stream()
-              .filter(order -> order.getRestaurant().getId()==restaurantid) // Filter by user name
-              .filter(order -> "null".equals(status) || "all".equals(status) || order.getStatus().equals(status)) // Filter by status
-              .toList();
-  
-      return filteredOrders;
+
+  @GetMapping("status/{status}") //exist
+  public Iterable<Order> getOrdrByType(@RequestAttribute("restaurantid") int restaurantid,
+      @PathVariable String status) {
+
+    Iterable<Order> filteredOrders = repo.findAll().stream()
+        .filter(order -> order.getRestaurant().getId() == restaurantid) // Filter by user name
+        .filter(order -> "null".equals(status) || "all".equals(status) || order.getStatus().equals(status)) // Filter by
+                                                                                                            // status
+        .toList();
+
+    return filteredOrders;
   }
-  @PostMapping("{id}/updateStatus/{status}")
-  public void updatestatus(@RequestAttribute("restaurantid") int restauranid,@PathVariable String status,@PathVariable int id) {
+
+  @PostMapping("{id}/updateStatus/{status}") //exist
+  public void updatestatus(@RequestAttribute("restaurantid") int restauranid, @PathVariable String status,
+      @PathVariable int id) {
     Order order = repo.findById(id).orElseThrow();
     order.setStatus(status);
     repo.save(order);
 
   }
-  @GetMapping("/getProcessed")
+
+  @GetMapping("/getProcessed") //exist
   public Iterable<Order> getOrdersProcessed(@RequestAttribute("restaurantid") int restaurantid) {
     Iterable<Order> orders = repo.findAll().stream().filter(e -> e.getRestaurant().getId() == restaurantid).toList();
 
@@ -95,15 +92,15 @@ public class OrderController {
     return orders;
   }
 
-  @PostMapping
+  @PostMapping //exist
   @Transactional
-  public Order addOrder(@RequestBody Order order, @RequestAttribute("userid") String userid) {
+  public Order addOrder(@RequestBody OrderDto order, @RequestAttribute("userid") String userid) {
     // Validate the incoming order request
     if (order == null) {
       return null;
     }
 
-    User user = order.getUser(); // Default to the user in the order
+   User user = new User();// Default to the user in the order
     Restaurant restaurant = order.getRestaurant(); // Default to the restaurant in the order
 
     // Try to fetch user from the user microservice
@@ -161,20 +158,30 @@ public class OrderController {
       // If the restaurant service is down, create the restaurant locally and use it
       System.out.println("Restaurant service not available, creating restaurant locally: " + e.getMessage());
     }
-
+    Order order2 = new Order();
     // Set the user and restaurant in the order
-    order.setUser(user);
-    order.setRestaurant(restaurant);
+    order2.setUser(user);
+    order2.setRestaurant(restaurant);
+    List<SideMenu> sides = new ArrayList<>();
+    for(MenuItems item : order.getItems()) {
+      for(Sides side : item.getSides()) {
+        SideMenu sideMenu = restTemplate.postForObject(
+          "http://localhost:8083/restaurants/{itemId}/{sideId}",
+          null, // Assuming no request body is needed
+          SideMenu.class,
+          item.getId(), // Replace {itemId}
+          side.getSideid() // Replace {sideId}
+      ); 
+    sides.add(sideMenu) ;
+     }
+    }
+    order2.setItems(sides);
 
     // Save the order
-    Order savedOrder = repo.save(order); // Assuming you have an orderRepository for saving
+    Order savedOrder = repo.save(order2); // Assuming you have an orderRepository for saving
     return savedOrder;
   }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Void> cancelOrder(@PathVariable int id) {
-    repo.deleteById(id);
-    return ResponseEntity.noContent().build();
-  }
+
 
 }

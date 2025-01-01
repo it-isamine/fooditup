@@ -10,5 +10,5 @@ public class Restaurant {
 
     private int restaurantid;
     private String name;
-    private boolean isEnable;
+    private Boolean enabled;
 }

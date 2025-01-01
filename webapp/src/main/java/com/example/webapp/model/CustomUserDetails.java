@@ -2,6 +2,7 @@ package com.example.webapp.model;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+
 import java.util.Collection;
 
 public class CustomUserDetails extends User {

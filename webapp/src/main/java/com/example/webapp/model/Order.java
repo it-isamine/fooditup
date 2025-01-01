@@ -1,8 +1,9 @@
 package com.example.webapp.model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import lombok.Data;
 
 @Data
@@ -14,10 +15,9 @@ public class Order {
     private List<MenuItems> items;
     private LocalDateTime createdAt;
     private String status;
-    
-   public Order() {
-    this.items = new ArrayList<>();
-   }
 
-  
+    public Order() {
+        this.items = new CopyOnWriteArrayList<>();
+    }
+
 }

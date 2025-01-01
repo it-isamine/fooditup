@@ -1,7 +1,5 @@
 package com.example.webapp;
 
-import java.util.ArrayList;
-
 import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.boot.SpringApplication;
@@ -15,7 +13,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.webapp.model.Order;
-import com.example.webapp.model.User;
+
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 
 @SpringBootApplication

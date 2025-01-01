@@ -1,9 +1,9 @@
 package com.example.restaurant.config;
 
 import jakarta.persistence.EntityManagerFactory;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -39,7 +39,8 @@ public class AdminDbConfig {
             @Qualifier("adminDatasource") DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean emFactoryBean = new LocalContainerEntityManagerFactoryBean();
         emFactoryBean.setDataSource(dataSource);
-        emFactoryBean.setPackagesToScan("com.example.restaurant.adminmodel"); // Adjust to your package containing entities
+        emFactoryBean.setPackagesToScan("com.example.restaurant.adminmodel"); // Adjust to your package containing
+                                                                              // entities
         emFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 
         Properties jpaProperties = new Properties();

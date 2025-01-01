@@ -25,8 +25,8 @@ public class LoginController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestParam String username, @RequestParam String email, 
-                         @RequestParam String password, @RequestParam String confirmPassword) {
+    public String register(@RequestParam String username, @RequestParam String email,
+            @RequestParam String password, @RequestParam String confirmPassword) {
         // Add your registration logic here
         return "redirect:/login?registration=success";
     }
@@ -42,4 +42,3 @@ public class LoginController {
         return "redirect:/login?reset=requested";
     }
 }
-

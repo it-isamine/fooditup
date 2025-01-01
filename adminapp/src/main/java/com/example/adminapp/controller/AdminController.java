@@ -33,6 +33,7 @@ import com.example.adminapp.config.SpringSecurityConfig;
 import com.example.adminapp.model.AuthRequest;
 import com.example.adminapp.model.MenuItems;
 import com.example.adminapp.model.Restaurant;
+import com.example.adminapp.model.RestaurantDto;
 import com.example.adminapp.model.User;
 import com.example.adminapp.repo.WebAppService;
 
@@ -74,6 +75,7 @@ public class AdminController {
     public String getRestaurants(Model model) {
         Iterable<Restaurant> restaurants = webAppService.getRestaurant();
         model.addAttribute("restaurants", restaurants);
+        System.out.println(restaurants);
         return "restaurant-management";
     }
 
@@ -82,6 +84,18 @@ public class AdminController {
         String token = (String) request.getSession().getAttribute("jwt");
         webAppService.deleteRestaurant(id, token);
         return new ModelAndView("redirect:/admin/restaurants");
+    }
+    @PostMapping("/restaurants/edit/{id}")
+    public ModelAndView edit(@PathVariable int id, HttpServletRequest request) {
+        String token = (String) request.getSession().getAttribute("jwt");
+        webAppService.deleteRestaurant(id, token);
+        return new ModelAndView("redirect:/admin/restaurants");
+    }
+    @GetMapping("/restaurants/add")
+    public String addRestaurant(Model model) {
+        RestaurantDto restaurant = new RestaurantDto();
+        model.addAttribute("restaurant", restaurant);
+        return "restaurant-create";
     }
 
     @GetMapping("/users")

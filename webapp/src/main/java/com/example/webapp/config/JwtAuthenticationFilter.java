@@ -4,12 +4,19 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.example.webapp.controller.WebAppController;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
@@ -21,8 +28,9 @@ import io.jsonwebtoken.UnsupportedJwtException;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private String secretKey = "your-very-secure-32-character-minimum-secret-key";// Replace with your actual secret
-                                                                                  // key.
+    private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+
+    private String secretKey = "your-very-secure-32-character-minimum-secret-key";
 
     @Autowired
     JwtDecoder jwtDecoder;
@@ -36,29 +44,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
-            return; // No JWT found in the request, continue filter chain.
+            return;
         }
-        // Jwt jwt = jwtDecoder.decode(authHeader.substring(7));
-        // // Extract claims from the decoded JWT (claims are in the "body" of the
-        // token)
-        // System.out.println(jwt);
-        // Claims claims = (Claims) jwt.getClaims();
-        String jwt = authHeader.substring(7); // Remove "Bearer " prefix.
+
+        String jwt = authHeader.substring(7);
         System.out.println(jwt);
         Claims claims = extractClaims(jwt);
 
-        // Add claims as request attributes for use in controllers.
-        System.out.println(claims.get("userid"));
-        System.out.println(claims.get("restaurantid"));
+        log.info("" + claims.get("userid"));
+        log.info("" + claims.get("restaurantid"));
 
         request.setAttribute("userid", claims.get("userid"));
         request.setAttribute("restaurantid", claims.get("restaurantid"));
-
         filterChain.doFilter(request, response);
     }
 
     public Claims extractClaims(String token) {
-        // Use the JWT library to parse the token and retrieve the claims
         return Jwts.parser()
                 .setSigningKey(secretKey.getBytes()) // Set the signing key
                 .build()
@@ -75,7 +76,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return claims;
         } catch (Exception e) {
             // Handle the case where the token is invalid or expired
-            System.out.println("Invalid token or expired token");
+            log.info("Invalid token or expired token");
             return null;
         }
     }
@@ -88,15 +89,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .build(); // Build the JwtParser
             return parser.parseClaimsJws(token).getBody(); // Parse the token and extract claims
         } catch (ExpiredJwtException e) {
-            System.out.println("Token expired: " + e.getMessage());
+            log.info("Token expired: " + e.getMessage());
         } catch (UnsupportedJwtException e) {
-            System.out.println("Unsupported JWT: " + e.getMessage());
+            log.info("Unsupported JWT: " + e.getMessage());
         } catch (MalformedJwtException e) {
-            System.out.println("Malformed JWT: " + e.getMessage());
+            log.info("Malformed JWT: " + e.getMessage());
         } catch (SignatureException e) {
-            System.out.println("Invalid signature: " + e.getMessage());
+            log.info("Invalid signature: " + e.getMessage());
         } catch (Exception e) {
-            System.out.println("JWT parsing error: " + e.getMessage());
+            log.info("JWT parsing error: " + e.getMessage());
         }
         return null; // Return null if the token is invalid
     }

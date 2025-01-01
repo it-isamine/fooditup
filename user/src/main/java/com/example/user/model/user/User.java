@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +17,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+
 import lombok.Data;
 import lombok.ToString;
 
@@ -52,13 +54,6 @@ public class User {
 	@ToString.Exclude
 	private List<Order> orders;
 
-	@PrePersist
-	public void prePersist() {
-		if (id == null) {
-			id = UUID.randomUUID(); // Automatically generate the UUID if it's not set
-		}
-		this.createdat = LocalDateTime.now();
-	}
 
 	public User() {
 	}
@@ -68,5 +63,13 @@ public class User {
 		this.email = email;
 		this.password = password;
 		this.role = role;
+	}
+
+	@PrePersist
+	public void prePersist() {
+		if (id == null) {
+			id = UUID.randomUUID(); // Automatically generate the UUID if it's not set
+		}
+		this.createdat = LocalDateTime.now();
 	}
 }

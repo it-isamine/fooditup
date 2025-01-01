@@ -8,9 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import com.example.restaurant.adminmodel.Restaurant;
 
-
 @Repository
-public interface AdminRepo extends JpaRepository<Restaurant,Integer> {
+public interface AdminRepo extends JpaRepository<Restaurant, Integer> {
+
     Optional<Restaurant> findByName(String name);
-    List<Restaurant> findAllByIsEnableTrue();
+
+    List<Restaurant> findAllByEnabledTrue();
 }

@@ -82,7 +82,7 @@ public class UserController {
 		return user;
 	}
 
-	@GetMapping("/user/me")
+	@GetMapping("/user/me") //exist
 	public Object getUserme(@RequestAttribute("userid") String name) {
 		Optional<User> user = repo.findByName(name);
 		if (!user.isPresent()) {
@@ -91,7 +91,7 @@ public class UserController {
 		return user.orElseThrow();
 	}
 
-	@GetMapping("/get")
+	@GetMapping("/get") //exist
 	public Iterable<User> getUsers() {
 		return repo.findAll();
 	}
@@ -101,7 +101,7 @@ public class UserController {
 		return Arepo.findAll();
 	}
 
-	@GetMapping("/users/me")
+	@GetMapping("/users/me") //exist
 	public ResponseEntity<HttpResponse> getMySelf(HttpServletRequest request) {
 		User user = repo.findByName((String) request.getSession().getAttribute("name")).orElseThrow();
 		return ResponseEntity.created(URI.create("")).body(
@@ -114,7 +114,7 @@ public class UserController {
 						.build());
 	}
 
-	@PutMapping("/users")
+	@PutMapping("/users") //exist
 	public void updateUser(@RequestAttribute("userid") String userid, @RequestBody User user) {
 		User user2 = repo.findByName(userid).orElseThrow();
 		if (user2.getRole().equals("ADMIN") || user2.getRole().equals("RESTAURANT_ADMIN")) {
@@ -128,7 +128,7 @@ public class UserController {
 			repo.save(usero);
 		}
 	}
-	@PutMapping("/self")
+	@PutMapping("/self") //exist
 public void updateSelf(@RequestAttribute("userid") String userid, @RequestBody User user) {
     User usero = repo.findByName(userid).orElseThrow();
 
@@ -165,7 +165,7 @@ private boolean isValid(String value) {
 		return user.orElseThrow();
 	}
 
-	@DeleteMapping("/users/{id}")
+	@DeleteMapping("/users/{id}") //exist
 	public void deleteUser(@PathVariable UUID id, @RequestAttribute("userid") String name) {
 		User user = repo.findByName(name).orElseThrow();
 		if (user.getRole().equals("ADMIN") || user.getRole().equals("RESTAURANT_ADMIN")) {
@@ -175,10 +175,6 @@ private boolean isValid(String value) {
 
 	}
 
-	@GetMapping("/users/{id}/adresses")
-	public String getAdress(@PathVariable UUID id) {
-		return repo.findById(id).orElseThrow().getAddress();
-	}
 
 	@PostMapping("/forgot-password")
 	public void forgotPassword(@RequestParam String email, HttpServletRequest request) {
@@ -193,7 +189,7 @@ private boolean isValid(String value) {
 		service.sendEmailVerification(user.getName(), email, confirmation.getToken());
 	}
 
-	@PostMapping("/createaccount")
+	@PostMapping("/createaccount") //exist
 	public User createaccount(@RequestBody User user) {
 		System.out.println(user);
 		Confirmation confirmation = new Confirmation(user.getId());

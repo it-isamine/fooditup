@@ -35,4 +35,14 @@ public interface RestaurantItemRepo extends JpaRepository<RestaurantItem, Long> 
                 ORDER BY COUNT(o.orderid) DESC
             """, nativeQuery = true)
     List<RestaurantItem> findMostFrequentItemsByUser(@Param("userId") UUID userId);
+
+    @Query(value = """
+                SELECT ri.*
+                FROM restaurantmenuitems ri
+                JOIN ordermenuitems oi ON ri.menuid = oi.menuid
+                JOIN orderz o ON oi.orderid = o.orderid
+                GROUP BY ri.menuid
+                ORDER BY COUNT(o.orderid) DESC
+            """, nativeQuery = true)
+    List<RestaurantItem> findMostFrequentItems();
 }

@@ -23,8 +23,8 @@ public class SpringSecurityConfig {
         return http
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/**").permitAll() // Public endpoints.
-                .anyRequest().authenticated() // Protect all other endpoints.
+                .requestMatchers("/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter,
                         org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
@@ -35,6 +35,6 @@ public class SpringSecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // For password hashing.
+        return new BCryptPasswordEncoder();
     }
 }

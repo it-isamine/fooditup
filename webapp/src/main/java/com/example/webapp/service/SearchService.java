@@ -2,9 +2,9 @@ package com.example.webapp.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.webapp.model.Restaurant;
 import com.example.webapp.model.RestaurantDto;
 import com.example.webapp.repo.WebAppService;
 

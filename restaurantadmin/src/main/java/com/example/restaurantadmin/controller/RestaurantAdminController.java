@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.restaurantadmin.model.Itemrest;
 import com.example.restaurantadmin.model.MenuItems;
 import com.example.restaurantadmin.model.Order;
+import com.example.restaurantadmin.model.OrderDto;
 import com.example.restaurantadmin.model.Restaurant;
 import com.example.restaurantadmin.model.User;
 import com.example.restaurantadmin.service.WebAppService;
@@ -57,7 +58,7 @@ public class RestaurantAdminController {
     @GetMapping("/orders")
     public String orders(Model model, HttpServletRequest request) {
         String token = (String) request.getSession().getAttribute("jwt");
-        Iterable<Order> orders = webAppService.getOrderOfRestaurant(token);
+        Iterable<OrderDto> orders = webAppService.getOrderOfRestaurant(token);
         model.addAttribute("orders", orders);
         return "restaurantadminorders";
     }

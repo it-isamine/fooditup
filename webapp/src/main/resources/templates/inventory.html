@@ -28,7 +28,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" th:href="@{/profile}">
+                        <a class="nav-link d-flex align-items-center" th:href="@{/profile/null}">
                             <i class="bi bi-person-circle me-2"></i>Profile
                         </a>
                     </li>
@@ -52,35 +52,30 @@
                 <div class="card shadow-sm rounded-3 mb-4">
                     <div class="card-body p-0">
                         <div th:if="${not #lists.isEmpty(order.items)}">
-                            <div th:each="item : ${order.items}" 
-                                 class="d-flex align-items-center p-3 border-bottom">
+                            <div th:each="item : ${order.items}" class="d-flex align-items-center p-3 border-bottom">
                                 <div class="flex-shrink-0">
                                     <img src="https://via.placeholder.com/80" class="rounded" alt="Food item">
                                 </div>
                                 <div class="flex-grow-1 ms-3">
                                     <form method="post" th:action="@{/deleteItem}" th:object="${item}"
-                                          class="d-flex justify-content-between align-items-start">
+                                        class="d-flex justify-content-between align-items-start">
                                         <div>
                                             <input type="hidden" name="id" th:value="${item.id}">
+                                            <input type="hidden" name="name" th:value="${item.name}">
+                                            <input type="hidden" name="description" th:value="${item.description}">
+                                            <input type="hidden" name="availability" th:value="${item.availability}">
+                                            <input type="hidden" name="imageurl" th:value="${item.imageurl}">
+
                                             <h3 th:text="${item.name}" class="h6 mb-1">Item Name</h3>
-                                            <p th:text="${item.description}" 
-                                               class="text-muted small mb-2">Description</p>
-                                            <div class="d-flex align-items-center gap-3">
-                                                <div class="input-group input-group-sm" style="width: 120px;">
-                                                    <button type="button" class="btn btn-outline-secondary">
-                                                        <i class="bi bi-dash"></i>
-                                                    </button>
-                                                    <input type="number" class="form-control text-center" value="1" min="1" max="99">
-                                                    <button type="button" class="btn btn-outline-secondary">
-                                                        <i class="bi bi-plus"></i>
-                                                    </button>
-                                                </div>
+                                            <p th:text="${item.description}" class="text-muted small mb-2">Description
+                                            </p>
+                                            <div >
+                                                
                                                 <button type="submit" class="btn btn-link text-danger p-0 small">
                                                     <i class="bi bi-trash me-1"></i>Remove
                                                 </button>
                                             </div>
                                         </div>
-                                        <span class="badge bg-light text-dark fs-6">$12.99</span>
                                     </form>
                                 </div>
                             </div>
@@ -104,75 +99,24 @@
                 <div class="card shadow-sm rounded-3 mb-4" th:if="${not #lists.isEmpty(order.items)}">
                     <div class="card-body">
                         <h3 class="h5 mb-4">Order Summary</h3>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Subtotal</span>
-                            <span>$25.98</span>
-                        </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Delivery Fee</span>
-                            <span>$2.99</span>
-                        </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Tax</span>
-                            <span>$2.31</span>
-                        </div>
-                        <hr>
-                        <div class="d-flex justify-content-between mb-4">
-                            <span class="fw-bold">Total</span>
-                            <span class="fw-bold text-danger">$31.28</span>
-                        </div>
-
-                        <!-- Promo Code -->
-                        <div class="mb-4">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Enter promo code">
-                                <button class="btn btn-outline-secondary" type="button">Apply</button>
-                            </div>
-                        </div>
+             
+                      
 
                         <!-- Place Order Button -->
                         <form method="post" th:action="@{/sendAllItems}" th:object="${order}">
                             <input type="hidden" th:field="*{items}">
                             <button type="submit" class="btn btn-danger rounded-pill w-100 py-3">
-                                <i class="bi bi-bag-check me-2"></i>Place Order • $31.28
+                                <i class="bi bi-bag-check me-2"></i>Place Order
                             </button>
                         </form>
-                    </div>
-                </div>
-
-                <!-- Delivery Options -->
-                <div class="card shadow-sm rounded-3" th:if="${not #lists.isEmpty(order.items)}">
-                    <div class="card-body">
-                        <h3 class="h5 mb-4">Delivery Options</h3>
-                        <div class="form-check mb-3">
-                            <input class="form-check-input" type="radio" name="deliveryOption" id="standard" checked>
-                            <label class="form-check-label" for="standard">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <span class="d-block fw-bold">Standard Delivery</span>
-                                        <small class="text-muted">Estimated delivery: 30-45 minutes</small>
-                                    </div>
-                                    <span>$2.99</span>
-                                </div>
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="deliveryOption" id="express">
-                            <label class="form-check-label" for="express">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <span class="d-block fw-bold">Express Delivery</span>
-                                        <small class="text-muted">Estimated delivery: 15-25 minutes</small>
-                                    </div>
-                                    <span>$4.99</span>
-                                </div>
-                            </label>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
+                <!-- Delivery Options -->
+               
 
     <!-- Footer -->
     <footer class="bg-dark text-light py-4 mt-auto">

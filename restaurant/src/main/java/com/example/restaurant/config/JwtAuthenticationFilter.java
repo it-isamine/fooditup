@@ -4,12 +4,16 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
+
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
@@ -18,9 +22,11 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 
+import org.slf4j.Logger;
+
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
+        private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
     private String secretKey = "your-very-secure-32-character-minimum-secret-key";// Replace with your actual secret
                                                                                   // key.
 
@@ -38,19 +44,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return; // No JWT found in the request, continue filter chain.
         }
-        // Jwt jwt = jwtDecoder.decode(authHeader.substring(7));
-        // // Extract claims from the decoded JWT (claims are in the "body" of the
-        // token)
-        // System.out.println(jwt);
-        // Claims claims = (Claims) jwt.getClaims();
         String jwt = authHeader.substring(7); // Remove "Bearer " prefix.
         System.out.println(jwt);
         Claims claims = extractClaims(jwt);
-
+        logger.info(""+claims.get("userid"));
+        logger.info(""+claims.get("restaurantid"));
         // Add claims as request attributes for use in controllers.
-        System.out.println(claims.get("userid"));
-        System.out.println(claims.get("restaurantid"));
-
         request.setAttribute("userid", claims.get("userid"));
         request.setAttribute("restaurantid", claims.get("restaurantid"));
 

@@ -19,16 +19,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/restaurant-admin}">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" th:href="@{/restaurant-admin/menu}">Manage Menu</a>
+                        <a class="nav-link" th:href="@{/restaurant-admin/home}">Dashboard</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/restaurant-admin/orders}">View Orders</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/logout}">Logout</a>
+                        <a class="nav-link" th:href="@{/log}">Logout</a>
                     </li>
                 </ul>
             </div>
@@ -81,7 +78,6 @@
                                 <th>Name</th>
                                 <th>Description</th>
                                 <th>Price</th>
-                                <th>Category</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>

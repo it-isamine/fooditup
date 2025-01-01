@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
 import lombok.Data;
 import lombok.ToString;
 
@@ -29,5 +30,4 @@ public class RestaurantItem {
 
     private Double price;
 
-    // Getters and Setters
 }

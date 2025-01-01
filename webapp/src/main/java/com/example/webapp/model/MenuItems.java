@@ -1,6 +1,5 @@
 package com.example.webapp.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Data;
@@ -13,4 +12,6 @@ public class MenuItems {
     private String description;
     private Boolean availability;
     private String imageurl;
+    private List<Sides> sides;
+    
 }
