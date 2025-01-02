@@ -150,7 +150,8 @@ public ModelAndView addOrder(@ModelAttribute RestItem menuItem) {
             log.info("Item not found: " + item);
         }
         order.setItems(items);
-
+       MenuItems items2 = order.getItems().stream().filter(e->e.getName().equals(item.getName())).findFirst().orElseThrow();
+        items.remove(items2);
         return new ModelAndView("redirect:/inventory");
     }
 

@@ -21,18 +21,18 @@ import lombok.Data;
 public class Sides {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int sideid;
+    private int sideid;
 
-    String name;
+    private String name;
 
-    int price;
+    private int price;
 
     @Column(name = "image_url")
-    String imageurl;
+    private String imageurl;
 
      @ManyToMany
     @JoinTable(name = "sidemenu", joinColumns = @JoinColumn(name = "sideid"), inverseJoinColumns = @JoinColumn(name = "menuid"))
     @JsonIgnore
-    List<MenuItems> items;
+    private List<MenuItems> items;
     
 }

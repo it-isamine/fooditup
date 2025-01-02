@@ -27,21 +27,17 @@ public class MenuItems {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "menuid")
-    int id;
+    private int id;
 
-    String name;
+    private String name;
 
-    String description;
+    private String description;
 
-    Boolean availability;
+    private Boolean availability;
 
-
-  @ManyToMany
-    @JoinTable(
-      name = "sidemenu", 
-      joinColumns = @JoinColumn(name = "menuid"), 
-      inverseJoinColumns = @JoinColumn(name = "sideid"))
-    List<Sides> sides;
+    @ManyToMany
+    @JoinTable(name = "sidemenu", joinColumns = @JoinColumn(name = "menuid"), inverseJoinColumns = @JoinColumn(name = "sideid"))
+    private List<Sides> sides;
 
     // Override toString to avoid circular references
     @Override

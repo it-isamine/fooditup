@@ -11,7 +11,7 @@
     <link href="styles.css" rel="stylesheet">
 </head>
 
-<body class="bg-light d-flex flex-column min-vh-100">
+<body class="d-flex flex-column min-vh-100">
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
         <div class="container">
@@ -23,7 +23,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <form method="get" action="/search" class="d-flex me-auto position-relative">
+                <form method="get" action="/search" class="d-flex me-auto position-relative flex-grow-1 mx-lg-4">
                     <div class="input-group">
                         <input type="text" name="query" id="searchInput" placeholder="Search for food or restaurants"
                             th:value="${query}" class="form-control rounded-pill"
@@ -108,9 +108,9 @@
 
     <div class="container mt-4">
         <div class="card shadow-sm mb-4">
-            <div class="mt-3 text-center">
+            <div class="card-body py-3">
                 <small class="text-muted">Recent searches:</small>
-                <div id="searchHistoryContainer" class="d-flex justify-content-center flex-wrap gap-2 mt-2"></div>
+                <div id="searchHistoryContainer" class="d-flex flex-wrap gap-2 mt-2"></div>
             </div>
         </div>
     </div>
@@ -126,6 +126,47 @@
                         <p class="card-text">Ready to explore delicious food options?</p>
                     </div>
                 </div>
+
+
+                <div th:each="item : ${frItems}" th:id="${'sideModal' + item.item.id}" class="modal fade" tabindex="-1" aria-labelledby="sideModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="sideModalLabel">Select Sides for <span th:text="${item.item.name}"></span></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form th:action="@{/addtoInventory}" method="post" th:object="${restitem}">
+                                    <input type="hidden" name="menuid" th:value="${item.item.id}" />
+                                    <input type="hidden" name="restaurantid" th:value="${item.restaurant.id}" />
+                                    <h6 class="mt-3">Select Sides to Add:</h6>
+                                    <div th:each="side : ${sides}">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="sidesid" th:value="${side.sideid}" th:id="${'side' + side.sideid + item.item.id}">
+                                            <label class="form-check-label" th:for="${'side' + side.sideid + item.item.id}" th:text="${side.name}"></label>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mt-3 w-100">Confirm Add to Cart</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <style>
+                    /* Set the background of the control icons to black */
+                    .carousel-control-prev-icon,
+                    .carousel-control-next-icon {
+                        background-color: black; /* Change the background color to black */
+                        border-radius: 50%;     /* Optional: Make it circular */
+                    }
+                    
+                    /* Set the hover state to ensure better visibility */
+                    .carousel-control-prev-icon:hover,
+                    .carousel-control-next-icon:hover {
+                        background-color: darkgray; /* Slightly lighter black for hover effect */
+                    }
+                    </style>
+                    
                 <section class="mb-5">
                     <h2 class="text-center mb-4">Frequently Ordered</h2>
                     <div id="frequentlyOrderedCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -154,7 +195,7 @@
                                                         <input type="checkbox" name="sidesid" th:value="${side.sideid}" />
                                                         <label th:text="${side.name}"></label><br />
                                                     </div>
-                                                    <button type="submit" class="btn btn-primary mt-3">Add to Inventory</button>
+                                                    <button type="submit" class="btn btn-primary mt-3 w-100">Add to Inventory</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -164,17 +205,15 @@
                         </div>
                         <!-- Carousel Controls -->
                         <button class="carousel-control-prev" type="button" data-bs-target="#frequentlyOrderedCarousel" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="carousel-control-prev-icon" aria-hidden="false"></span>
                             <span class="visually-hidden">Previous</span>
                         </button>
                         <button class="carousel-control-next" type="button" data-bs-target="#frequentlyOrderedCarousel" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="carousel-control-next-icon" aria-hidden="false"></span>
                             <span class="visually-hidden">Next</span>
                         </button>
                     </div>
                 </section>
-                
-                
                 
                 <!-- Restaurants Section -->
                 <section class="mb-5">
@@ -184,31 +223,33 @@
                             <div class="card h-100 shadow-sm">
                                 <img class="card-img-top"
                                     th:src="${restaurant.imageurl != null ? restaurant.imageurl : 'https://via.placeholder.com/300x200'}"
-                                    alt="Restaurant">
-                                <div class="card-body">
+                                    alt="Restaurant" style="height: 200px; object-fit: cover;">
+                                <div class="card-body d-flex flex-column">
                                     <h3 class="card-title h5" th:text="${restaurant.name}">Restaurant Name</h3>
                                     <p class="card-text">
                                         <i class="bi bi-star-fill text-warning"></i>
                                         <span class="ms-1" th:text="${restaurant.rating}">4.5</span>
                                     </p>
 
-                                    <a th:href="@{/restaurant/{id}(id=${restaurant.restaurantid})}"
-                                        class="btn btn-outline-danger mt-3">
-                                        <i class="bi bi-menu-button-wide me-1"></i>View Menu
-                                    </a>
-                                    <form th:action="@{/follow/{restaurantId}(restaurantId=${restaurant.restaurantid})}"
-                                        method="post" th:if="${!restaurant.followedByCurrentUser}">
-                                        <button type="submit" class="btn btn-outline-success mt-2">
-                                            <i class="bi bi-heart me-1"></i>Follow
-                                        </button>
-                                    </form>
-                                    <form
-                                        th:action="@{/unfollow/{restaurantId}(restaurantId=${restaurant.restaurantid})}"
-                                        method="post" th:if="${restaurant.followedByCurrentUser}">
-                                        <button type="submit" class="btn btn-outline-danger mt-2">
-                                            <i class="bi bi-heart-fill me-1"></i>Unfollow
-                                        </button>
-                                    </form>
+                                    <div class="mt-auto">
+                                        <a th:href="@{/restaurant/{id}(id=${restaurant.restaurantid})}"
+                                            class="btn btn-outline-danger w-100 mb-2">
+                                            <i class="bi bi-menu-button-wide me-1"></i>View Menu
+                                        </a>
+                                        <form th:action="@{/follow/{restaurantId}(restaurantId=${restaurant.restaurantid})}"
+                                            method="post" th:if="${!restaurant.followedByCurrentUser}" class="d-grid">
+                                            <button type="submit" class="btn btn-outline-success">
+                                                <i class="bi bi-heart me-1"></i>Follow
+                                            </button>
+                                        </form>
+                                        <form
+                                            th:action="@{/unfollow/{restaurantId}(restaurantId=${restaurant.restaurantid})}"
+                                            method="post" th:if="${restaurant.followedByCurrentUser}" class="d-grid">
+                                            <button type="submit" class="btn btn-outline-danger">
+                                                <i class="bi bi-heart-fill me-1"></i>Unfollow
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -216,92 +257,83 @@
                 </section>
             </div>
 
-            <div class="container">
-                <section class="mb-5">
-                    <h2 class="text-center mb-4">Frequently Ordered</h2>
-                    <div id="frequentlyOrderedCarousel" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-inner">
-                            <div th:each="batch, batchStat : ${#lists.partition(frItems, 3)}" 
-                                 th:class="${batchStat.index == 0 ? 'carousel-item active' : 'carousel-item'}">
-                                <div class="row g-4">
-                                    <div th:each="item, itemStat : ${batch}" class="col-md-4">
-                                        <div class="card shadow-sm h-100">
-                                            <img class="card-img-top"
-                                                th:src="${item.item.imageurl != null ? item.item.imageurl : 'https://via.placeholder.com/300x200'}"
-                                                alt="Item image" style="height: 200px; object-fit: cover;">
-                                            <div class="card-body d-flex flex-column">
-                                                <h5 class="card-title" th:text="${item.item.name}">Item Name</h5>
-                                                <p class="card-text text-muted" th:text="${item.item.description}">Description</p>
-                                                <p class="card-text mt-auto">
+            <!-- Sidebar -->
+            <div class="col-lg-3">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <section class="frequently-ordered-section">
+                            <h2 class="text-center mb-4" th:text="#{part.latest}">Frequently Ordered</h2>
+                            <div class="row g-4">
+                                <div class="col-12" th:each="item : ${itemz}">
+                                    <ul class="list-unstyled">
+                                        <li class="mb-3">
+                                            <div>
+                                                <h5 class="mb-1" th:text="${item.item.name}">Item Name</h5>
+                                                <p class="text-muted mb-1" th:text="${item.item.description}">Description</p>
+                                                <p class="mb-2">
                                                     <i class="bi bi-tag-fill text-danger me-1"></i>
-                                                    Price: <span th:text="${#numbers.formatDecimal(item.price, 1, 2)}">$0.00</span>
+                                                    Price: <span th:text="${item.price}">$0.00</span>
                                                 </p>
-                                                <button type="button" class="btn btn-outline-danger rounded-pill w-100 add-to-cart-btn" 
-                                                        data-bs-toggle="modal" th:data-bs-target="'#sideModal' + ${item.item.id}"
-                                                        th:data-item-id="${item.item.id}"
-                                                        th:data-restaurant-id="${item.restaurant.id}"
-                                                        th:data-price="${item.price}">
+                                            </div>
+                                            <form method="post" th:action="@{/addtoInventory}">
+                                                <input type="hidden" name="menuid" th:value="${item.item.id}">
+                                                <input type="hidden" name="restaurantid" th:value="${item.restaurant.id}">
+                                                <input type="hidden" name="price" th:value="${item.price}">
+                                                <button type="submit" class="btn btn-outline-danger rounded-pill w-100">
                                                     <i class="bi bi-cart-plus me-1"></i>Add to Cart
                                                 </button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                            </form>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#frequentlyOrderedCarousel" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#frequentlyOrderedCarousel" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
-                    </div>
-                </section>
-            
-                <!-- Side Selection Modals -->
-                <div th:each="item : ${frItems}" th:id="'sideModal' + ${item.item.id}" class="modal fade" tabindex="-1" aria-labelledby="sideModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="sideModalLabel">Select Sides for <span th:text="${item.item.name}"></span></h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form th:id="'addToCartForm' + ${item.item.id}" method="post" th:action="@{/addtoInventory}">
-                                    <input type="hidden" name="menuid" th:value="${item.item.id}">
-                                    <input type="hidden" name="restaurantid" th:value="${item.restaurant.id}">
-                                    <input type="hidden" name="price" th:value="${item.price}">
-                                    <div class="mb-3">
-                                        <label class="form-label">Choose your sides:</label>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="fries" id="friesCheck" name="sides">
-                                            <label class="form-check-label" for="friesCheck">
-                                                French Fries
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="salad" id="saladCheck" name="sides">
-                                            <label class="form-check-label" for="saladCheck">
-                                                Side Salad
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="drink" id="drinkCheck" name="sides">
-                                            <label class="form-check-label" for="drinkCheck">
-                                                Soft Drink
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Add to Cart with Sides</button>
-                                </form>
-                            </div>
-                        </div>
+                        </section>
                     </div>
                 </div>
             </div>
-            
+        </div>
+    </div>
+
+    <!-- Side Selection Modals -->
+    <div th:each="item : ${frItems}" th:id="'sideModal' + ${item.item.id}" class="modal fade" tabindex="-1" aria-labelledby="sideModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sideModalLabel">Select Sides for <span th:text="${item.item.name}"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:id="'addToCartForm' + ${item.item.id}" method="post" th:action="@{/addtoInventory}">
+                        <input type="hidden" name="menuid" th:value="${item.item.id}">
+                        <input type="hidden" name="restaurantid" th:value="${item.restaurant.id}">
+                        <input type="hidden" name="price" th:value="${item.price}">
+                        <div class="mb-3">
+                            <label class="form-label">Choose your sides:</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="fries" id="friesCheck" name="sides">
+                                <label class="form-check-label" for="friesCheck">
+                                    French Fries
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="salad" id="saladCheck" name="sides">
+                                <label class="form-check-label" for="saladCheck">
+                                    Side Salad
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="drink" id="drinkCheck" name="sides">
+                                <label class="form-check-label" for="drinkCheck">
+                                    Soft Drink
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Add to Cart with Sides</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
             
     <footer class="bg-dark text-light py-5 mt-auto">
         <div class="container">
@@ -324,7 +356,7 @@
                 <div class="col-md-3 mb-4 mb-md-0">
                     <h5 class="mb-3">Contact Us</h5>
                     <p class="small">
-                        <i class="bi bi-envelope me-2"></i>Email: info@fooditup.com<br>
+                        <i class="bi bi-envelope me-2"></i>Email: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5930373f36193f36363d302d2c29773a3634">[email&#160;protected]</a><br>
                         <i class="bi bi-telephone me-2"></i>Phone: (555) 123-4567
                     </p>
                 </div>
@@ -355,19 +387,11 @@
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const searchInput = document.getElementById('searchInput');
             const liveSearchResults = document.getElementById('liveSearchResults');
-            const categoryPills = document.querySelectorAll('.btn[data-category]');
-            const filterForm = document.getElementById('filterForm');
-            const filterDropdown = document.getElementById('filterDropdown');
-            const filterMenu = document.querySelector('.dropdown-menu');
-            const priceRange = document.getElementById('priceRange');
-            const priceRangeValue = document.getElementById('priceRangeValue');
-            const maxDistance = document.getElementById('maxDistance');
-            const maxDistanceValue = document.getElementById('maxDistanceValue');
             const searchHistoryContainer = document.getElementById('searchHistoryContainer');
 
             // Live search functionality
@@ -393,44 +417,6 @@
                 if (!searchInput.contains(event.target) && !liveSearchResults.contains(event.target)) {
                     liveSearchResults.style.display = 'none';
                 }
-            });
-
-            // Category pill functionality
-            categoryPills.forEach(pill => {
-                pill.addEventListener('click', function () {
-                    this.classList.toggle('active');
-                    // You can add logic here to filter results based on selected categories
-                });
-            });
-
-            // Filter dropdown toggle
-            filterDropdown.addEventListener('click', function () {
-                filterMenu.classList.toggle('show');
-            });
-
-            // Close filter dropdown when clicking outside
-            document.addEventListener('click', function (event) {
-                if (!filterDropdown.contains(event.target) && !filterMenu.contains(event.target)) {
-                    filterMenu.classList.remove('show');
-                }
-            });
-
-            // Price range slider
-            priceRange.addEventListener('input', function () {
-                priceRangeValue.textContent = '$' + this.value;
-            });
-
-            // Max distance slider
-            maxDistance.addEventListener('input', function () {
-                maxDistanceValue.textContent = this.value + ' km';
-            });
-
-            // Filter form submission
-            filterForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-                // Add logic here to apply filters and update search results
-                console.log('Filters applied');
-                filterMenu.classList.remove('show');
             });
 
             // Voice search functionality (placeholder)
@@ -477,42 +463,38 @@
                     searchInput.focus();
                 }
             });
-
-            // Initialize sliders
-            priceRangeValue.textContent = '$' + priceRange.value;
-            maxDistanceValue.textContent = maxDistance.value + ' km';
         });
     </script>
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize carousel
-    var myCarousel = new bootstrap.Carousel(document.getElementById('frequentlyOrderedCarousel'), {
-        interval: 5000,  // Change slide every 5 seconds
-        wrap: true,      // Continuous loop
-        touch: true      // Allow swiping on touch devices
-    });
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize carousel
+        var myCarousel = new bootstrap.Carousel(document.getElementById('frequentlyOrderedCarousel'), {
+            interval: 5000,  // Change slide every 5 seconds
+            wrap: true,      // Continuous loop
+            touch: true      // Allow swiping on touch devices
+        });
 
-    // Handle Add to Cart button click
-    const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
-    addToCartButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const itemId = this.getAttribute('data-item-id');
-            const restaurantId = this.getAttribute('data-restaurant-id');
-            const price = this.getAttribute('data-price');
-            
-            const modal = document.getElementById('sideModal' + itemId);
-            const form = document.getElementById('addToCartForm' + itemId);
-            
-            form.querySelector('input[name="menuid"]').value = itemId;
-            form.querySelector('input[name="restaurantid"]').value = restaurantId;
-            form.querySelector('input[name="price"]').value = price;
+        // Handle Add to Cart button click
+        const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const itemId = this.getAttribute('data-item-id');
+                const restaurantId = this.getAttribute('data-restaurant-id');
+                const price = this.getAttribute('data-price');
+                
+                const modal = document.getElementById('sideModal' + itemId);
+                const form = document.getElementById('addToCartForm' + itemId);
+                
+                form.querySelector('input[name="menuid"]').value = itemId;
+                form.querySelector('input[name="restaurantid"]').value = restaurantId;
+                form.querySelector('input[name="price"]').value = price;
+            });
         });
     });
-});
-</script>
+    </script>
 </body>
 
 </html>

@@ -16,15 +16,15 @@ import lombok.Getter;
 public class Followed {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    private int id;
 
     @ManyToOne
     @JoinColumn(name = "userid")
-    User user;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "restaurantid")
-    Restaurant restaurant;
+    private Restaurant restaurant;
 
     public Followed() {
     }

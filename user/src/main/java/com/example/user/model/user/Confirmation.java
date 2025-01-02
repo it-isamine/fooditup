@@ -16,11 +16,11 @@ public class Confirmation {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  int id;
+  private int id;
 
-  String token;
+  private String token;
 
-  UUID userid;
+  private UUID userid;
 
   public Confirmation() {
   }

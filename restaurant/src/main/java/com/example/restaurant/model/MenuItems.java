@@ -42,7 +42,7 @@ public class MenuItems {
     private String imageurl;
 
     @ManyToMany(mappedBy = "items")
-    List<Sides> sides;
+    private List<Sides> sides;
 
     @PrePersist
     public void assignRandomId() {

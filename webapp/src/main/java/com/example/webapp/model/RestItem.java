@@ -7,9 +7,9 @@ import lombok.Data;
 @Data
 public class RestItem {
 
-    int restaurantid;
-    int menuid;
-    Double price;
-    List<Integer> sidesid;
+    private int restaurantid;
+    private int menuid;
+    private Double price;
+    private List<Integer> sidesid;
 
 }

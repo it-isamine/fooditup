@@ -13,7 +13,7 @@ import lombok.Data;
 public class Sides {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int sideid;
-    String name;
-    int price;
+    private int sideid;
+    private String name;
+    private int price;
 }

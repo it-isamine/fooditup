@@ -26,26 +26,26 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "userid")
-    UUID id;
+    private UUID id;
 
-    String name;
+    private String name;
 
-    String email;
+    private String email;
 
-    String password;
+    private String password;
 
-    String phone;
+    private String phone;
 
-    String address;
+    private String address;
 
-    String role;
+    private String role;
 
-    LocalDateTime createdat;
+    private LocalDateTime createdat;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "restaurantid")
     @JsonIgnore
-    Restaurant restaurant;
+    private Restaurant restaurant;
 
     @PrePersist
     public void prePersist() {

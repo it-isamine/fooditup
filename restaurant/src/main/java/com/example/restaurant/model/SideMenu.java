@@ -13,9 +13,9 @@ import lombok.Data;
 public class SideMenu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int sidemenuid;
-    int sideid;
-    int menuid;
+    private int sidemenuid;
+    private int sideid;
+    private int menuid;
 
    
 }

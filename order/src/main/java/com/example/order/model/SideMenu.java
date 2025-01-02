@@ -20,18 +20,18 @@ import lombok.Data;
 public class SideMenu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int sidemenuid;
+    private int sidemenuid;
 
      @ManyToOne
     @JoinColumn(name = "menuid")
-    MenuItems item;
+    private MenuItems item;
 
     @ManyToOne
     @JoinColumn(name = "sideid")
-    Sides side;
+    private Sides side;
 
     @ManyToMany(mappedBy = "items")
     @JsonIgnore
-    List<Order> orders;
+    private List<Order> orders;
     
 }

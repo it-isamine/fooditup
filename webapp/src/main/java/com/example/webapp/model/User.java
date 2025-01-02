@@ -6,14 +6,14 @@ import lombok.Data;
 @Data
 public class User {
 
-    UUID id;
-    String name;
-    String email;
-    String password;
-    String phone;
-    String address;
-    String role;
-    Restaurant restaurant;
+    private UUID id;
+    private String name;
+    private String email;
+    private String password;
+    private String phone;
+    private String address;
+    private String role;
+    private Restaurant restaurant;
 
     public User() {
     }

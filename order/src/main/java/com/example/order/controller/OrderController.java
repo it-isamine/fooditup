@@ -15,6 +15,8 @@ import com.example.order.repo.OrderRepo;
 
 import jakarta.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -39,6 +41,7 @@ public class OrderController {
   OrderRepo repo;
 
   RestTemplate restTemplate = new RestTemplate();
+  public Logger logger = LoggerFactory.getLogger(OrderController.class);
 
   @GetMapping("/{id}") //exist
   public ResponseEntity<Order> getOrder(@PathVariable int id) {
@@ -68,10 +71,9 @@ public class OrderController {
 
     Iterable<Order> filteredOrders = repo.findAll().stream()
         .filter(order -> order.getRestaurant().getId() == restaurantid) // Filter by user name
-        .filter(order -> "null".equals(status) || "all".equals(status) || order.getStatus().equals(status)) // Filter by
-                                                                                                            // status
+        .filter(order -> "null".equals(status) || "all".equals(status) || order.getStatus().equals(status)) // Filter by                                                                                           // status
         .toList();
-
+        logger.info(""+filteredOrders);
     return filteredOrders;
   }
 

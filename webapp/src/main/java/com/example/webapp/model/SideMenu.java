@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class SideMenu {
-    int sidemenuid;
-    MenuItems item;
-    Sides sides;
+    private int sidemenuid;
+    private MenuItems item;
+    private Sides sides;
 }

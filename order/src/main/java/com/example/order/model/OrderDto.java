@@ -11,15 +11,10 @@ public class OrderDto {
 
     private int id;
 
-
-
     private Restaurant restaurant;
-
 
     private List<MenuItems> items = new ArrayList<>();
 
     private LocalDateTime createdAt;
 
-
-  
 }

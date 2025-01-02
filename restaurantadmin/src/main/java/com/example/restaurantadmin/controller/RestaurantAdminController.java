@@ -2,6 +2,8 @@ package com.example.restaurantadmin.controller;
 
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +30,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("/restaurant-admin")
 public class RestaurantAdminController {
+    Logger logger = (Logger) LoggerFactory.getLogger(RestaurantAdminController.class);
     @Autowired
     WebAppService webAppService;
 
@@ -65,7 +68,7 @@ public class RestaurantAdminController {
     @GetMapping("/orders/{status}")
     public String orders(Model model, HttpServletRequest request,@PathVariable String status) {
         String token = (String) request.getSession().getAttribute("jwt");
-        Iterable<Order> orders = webAppService.getOrderOfRestaurantByType(token,status);
+        Iterable<OrderDto> orders = webAppService.getOrderOfRestaurantByType(token,status);
         model.addAttribute("orders", orders);
         return "restaurantadminorders";
     }
@@ -76,7 +79,7 @@ public class RestaurantAdminController {
                                     Model model) {
         String token = (String) request.getSession().getAttribute("jwt");
         webAppService.updateOrder(token, status, id);
-        Iterable<Order> orders = webAppService.getOrderOfRestaurantByType(token, status);
+        Iterable<OrderDto> orders = webAppService.getOrderOfRestaurantByType(token, status);
         model.addAttribute("orders", orders);
         return new ModelAndView("redirect:/restaurant-admin/orders");
     }
@@ -105,7 +108,13 @@ public class RestaurantAdminController {
         return new ModelAndView("redirect:/restaurant-admin/menu");
 
     }
-
+    @PostMapping("/menu/edit")
+    public ModelAndView editMenu(@ModelAttribute("menuItem") Itemrest item,HttpServletRequest request) {
+        logger.info(""+item);
+        webAppService.updateItem( (String) request.getSession().getAttribute("jwt"), item);
+        
+        return new ModelAndView("redirect:/restaurant-admin/menu");
+    }
     @PostMapping("/users/delete/{id}")
     public ModelAndView deleteuser(@PathVariable UUID id, HttpServletRequest request) throws InterruptedException {
         String token = (String) request.getSession().getAttribute("jwt");

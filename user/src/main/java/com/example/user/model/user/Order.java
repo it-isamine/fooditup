@@ -23,15 +23,15 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "orderid")
-    int id;
+    private int id;
     
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "userid")
-    User user;
+    private User user;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "restaurantid")
-    Restaurant restaurant;
+    private Restaurant restaurant;
 
     LocalDateTime createdat;
 

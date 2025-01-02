@@ -3,6 +3,9 @@ package com.example.restaurant.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.spi.LoggerRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +30,7 @@ import com.example.restaurant.model.*;
 @RestController
 @RequestMapping("/restaurants")
 public class RestaurantController {
-
+  Logger logger = LoggerFactory.getLogger(RestaurantController.class);
   @Autowired
   RestaurantRepo repo;
 
@@ -281,5 +285,41 @@ public class RestaurantController {
         .filter(e -> e.getRestaurant().getId() == restauranid && e.getItem().getId() == id).findFirst().orElseThrow();
     restaurantItemRepo.deleteById(item.getId());
   }
+
+  @PutMapping("/uptomenu")
+public void upMenu(@RequestAttribute("restaurantid") int restaurantid, @RequestBody Itemrest item) {
+    // Find the restaurant
+    Restaurant restaurant = repo.findById(restaurantid)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found"));
+
+    // Find the restaurant item
+    RestaurantItem restaurantItem = restaurantItemRepo.findAll().stream()
+        .filter(e -> e.getRestaurant().getId() == restaurantid && 
+                     e.getItem().getName().equals(item.getItem().getName()))
+        .findFirst()
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, 
+            "RestaurantItem not found for the given restaurant and item name"));
+
+    // Log the restaurant item
+    logger.info("Found RestaurantItem: {}", restaurantItem);
+
+    // Update the menu item details
+    MenuItems menuItem = new MenuItems();
+    menuItem.setId(restaurantItem.getItem().getId());
+    menuItem.setName(item.getItem().getName());
+    menuItem.setDescription(item.getItem().getDescription());
+    menuItem.setAvailability(restaurantItem.getItem().getAvailability());
+    menuItem.setImageurl(restaurantItem.getItem().getImageurl());
+
+    // Associate the updated menu item and price
+    restaurantItem.setItem(menuItem);
+    restaurantItem.setPrice(item.getPrice());
+
+    // Save the updated restaurant item
+    restaurantItemRepo.save(restaurantItem);
+
+    logger.info("Updated RestaurantItem successfully: {}", restaurantItem);
+}
+
 
 }

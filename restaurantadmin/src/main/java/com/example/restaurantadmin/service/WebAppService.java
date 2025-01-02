@@ -14,6 +14,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateCustomizer;
 import org.springframework.core.ParameterizedTypeReference;
@@ -24,6 +27,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class WebAppService {
 
+    Logger logger = LoggerFactory.getLogger(WebAppService.class);
     @Autowired
     RestTemplate restTemplate;
 
@@ -60,14 +64,14 @@ public class WebAppService {
         return response.getBody();
     }
 
-    public Iterable<Order> getOrderOfRestaurantByType(String token, String status) { // exist
+    public Iterable<OrderDto> getOrderOfRestaurantByType(String token, String status) { // exist
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token); // Add the token to the header
         HttpEntity<String> entity = new HttpEntity<>(headers);
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Iterable<Order>> response = restTemplate.exchange(
+        ResponseEntity<Iterable<OrderDto>> response = restTemplate.exchange(
                 "http://localhost:8090/orders/status/" + status,
-                HttpMethod.GET, entity, new ParameterizedTypeReference<Iterable<Order>>() {
+                HttpMethod.GET, entity, new ParameterizedTypeReference<Iterable<OrderDto>>() {
 
                 });
         return response.getBody();
@@ -132,7 +136,19 @@ public class WebAppService {
                 entity, Void.class);
 
     }
+    public void updateItem(String token, Itemrest item) { // exist
+        HttpHeaders headers = new HttpHeaders();
+        logger.info("ee:"+item);
+        headers.set("Authorization", "Bearer " + token); // Add the token to the header
+        headers.setContentType(MediaType.APPLICATION_JSON); // Set the content type to JSON
 
+        // Include the order object in the request body
+        HttpEntity<Itemrest> entity = new HttpEntity<>(item, headers);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity response = restTemplate.exchange("http://localhost:8090/restaurants/uptomenu", HttpMethod.PUT,
+                entity, Void.class);
+
+    }
     public void deleteItem(String token, int id) { // exist
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token); // Add the token to the header
